@@ -1,5 +1,5 @@
 const http = require('http');
-const app = require('./backend/app');
+const app = require('./src/backend/app');
 
 const port = process.env.PORT || 3000;
 app.set('port', port);
