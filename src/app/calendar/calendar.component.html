@@ -1,0 +1,30 @@
+<section class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 py-4 my-3 calendar">
+      <div class="d-flex justify-content-center pb-3">
+        <div class="arrow-left" (click)="displayPreviousMonth()"></div>
+        <div class="text-center px-5">{{displayedMonth.format('MMMM')}}</div>
+        <div class="arrow-right" (click)="displayNextMonth()"></div>
+      </div>
+      <div class="col-md-12 d-table">
+        <div class="d-table-row week-days">
+          <div class="d-table-cell">Mo</div>
+          <div class="d-table-cell">Tu</div>
+          <div class="d-table-cell">We</div>
+          <div class="d-table-cell">Th</div>
+          <div class="d-table-cell">Fr</div>
+          <div class="d-table-cell">St</div>
+          <div class="d-table-cell">Su</div>
+        </div>
+        <div *ngFor="let week of calendar; let i=index " class="d-table-row dates">
+          <div *ngFor="let day of week" class="d-table-cell"
+               [ngClass]="{
+            'past-day': (day.isBefore(displayedMonth, 'month') || day.isAfter(displayedMonth, 'month')),
+            'current-day': day.isSame(today, 'day')}">
+            {{day.format('DD')}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
