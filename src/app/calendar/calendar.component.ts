@@ -30,7 +30,7 @@ export class CalendarComponent implements OnInit {
    * @param year number - year of displayed month
    * @returns array - array of dates grouped by weeks
    */
-  private getMonthCalendar(month: number, year: number) {
+  getMonthCalendar(month: number, year: number) {
     const firstDay = moment([year, month, 1]);
     const lastDay = firstDay.clone().endOf('month');
     let monday = firstDay.clone().startOf('isoWeek');
