@@ -10,7 +10,7 @@ import * as moment from 'moment';
 })
 
 export class EventsService {
-  groupedEvents = new BehaviorSubject<GroupedEvents|null>(null);
+  private  groupedEvents = new BehaviorSubject<GroupedEvents|null>(null);
   constructor( private http: HttpClient) { }
 
   getEvents(): Observable<Event[]> {

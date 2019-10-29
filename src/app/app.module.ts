@@ -7,11 +7,15 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { EventListComponent } from './event-list/event-list.component';
+import { EventComponent } from './event-list/event/event.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CalendarComponent
+    CalendarComponent,
+    EventListComponent,
+    EventComponent
   ],
   imports: [
     BrowserModule,

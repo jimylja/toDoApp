@@ -1,0 +1,3 @@
+<ng-container *ngIf="(events$ | async) as events">
+  <app-event *ngFor="let event of events" [event]="event"></app-event>
+</ng-container>
