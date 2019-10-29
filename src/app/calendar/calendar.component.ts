@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { EventsService } from '../services/events.service';
+import { Observable} from 'rxjs';
+import { Event, GroupedEvents } from '../models/event';
 import * as moment from 'moment';
 
 @Component({
@@ -10,11 +13,16 @@ export class CalendarComponent implements OnInit {
 
   today = moment();
   displayedMonth: moment.Moment;
+  events$: Observable<Event[]>;
+  groupedEvents$: Observable<GroupedEvents>;
+  moment: any = moment;
 
-  constructor() { }
+  constructor( private eventService: EventsService) { }
 
   ngOnInit() {
     this.displayedMonth = this.today.clone().startOf('month');
+    this.events$ = this.eventService.getEvents();
+    this.groupedEvents$ = this.eventService.getGroupedEvents();
   }
 
   /**
@@ -37,7 +45,7 @@ export class CalendarComponent implements OnInit {
     const displayedWeeks = lastDay.diff(monday, 'weeks');
 
     const monthDates = [];
-    for ( let i = 0; i <= displayedWeeks; i++) {
+    for (let i = 0; i <= displayedWeeks; i++) {
       const weekDates = [];
       for (let j = 0; j < 7; j++) {
         weekDates.push(monday.clone().add(j, 'days'));
@@ -55,5 +63,7 @@ export class CalendarComponent implements OnInit {
   displayPreviousMonth(): void {
     this.displayedMonth = this.displayedMonth.subtract(1, 'month');
   }
+
+  isCurrent
 
 }

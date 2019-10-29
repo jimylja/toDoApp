@@ -50,15 +50,12 @@
       justify-content: center;
       position: absolute;
       bottom: 0;
-      .category-1, .category-2, .category-3 {
+      .category-mark {
         width: 5px;
         height: 5px;
         margin: 0 1px;
         border-radius: 50%;
       }
-      .category-1 {background-color: $category-1;}
-      .category-2 {background-color: $category-2;}
-      .category-3 {background-color: $category-3;}
     }
   }
 }

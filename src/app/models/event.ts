@@ -9,3 +9,10 @@ export interface Event {
   category: Category;
   status: 'published' | 'draft';
 }
+
+export interface GroupedEvents {
+  [date: string]: {
+    events: Array<Event>;
+    categories: Array<string>;
+  };
+}
