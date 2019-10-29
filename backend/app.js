@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
+const routes = require('./routes');
 
 //Database connection
 mongoose.connect('mongodb://admin-todo:niBleI_2@ds137368.mlab.com:37368/todo-app', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -14,7 +15,6 @@ mongoose.connection
     const info = mongoose.connections[0];
     console.log(`Connected to ${info.host}:${info.port}/${info.name}`);
   });
-
 
 //Headers
 app.use((req, res, next) => {
@@ -31,5 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+app.use('/events', routes.events);
+app.use('/category', routes.category);
 
 module.exports = app;

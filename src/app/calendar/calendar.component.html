@@ -1,0 +1,32 @@
+<section class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 py-4 my-3 calendar">
+      <div class="d-flex justify-content-center pb-3">
+        <div class="arrow-left" (click)="displayPreviousMonth()"></div>
+        <div class="text-center px-5">{{displayedMonth.format('MMMM')}}</div>
+        <div class="arrow-right" (click)="displayNextMonth()"></div>
+      </div>
+      <div class="col-md-12 d-table">
+        <div class="d-table-row week-days">
+          <div *ngFor="let i of [1,2,3,4,5,6,7]" class="d-table-cell">
+            {{moment().isoWeekday(i).format('dd')}}
+          </div>
+        </div>
+        <div *ngFor="let week of calendar" class="d-table-row dates">
+          <div *ngFor="let day of week" class="d-table-cell"
+               [ngClass]="{ 'past-day': !day.isSame(displayedMonth, 'month'),
+                            'current-day': day.isSame(today, 'day')}">
+            <time [attr.datetime]="day.format('YYYY-MM-DD')">{{day.format('DD')}}</time>
+            <ng-container *ngIf="(groupedEvents$ | async) as events">
+              <div class="event-marks" *ngIf="events[day.format('YYYY-MM-DD')]">
+                <div *ngFor="let color of events[day.format('YYYY-MM-DD')].categories"
+                  [ngStyle]="{'background-color': color}" class="category-mark">
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
