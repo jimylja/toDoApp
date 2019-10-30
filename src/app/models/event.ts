@@ -7,6 +7,7 @@ export interface Event {
   startDate: string;
   endDate: string;
   category: Category;
+  complete: boolean;
   status: 'published' | 'draft';
 }
 

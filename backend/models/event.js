@@ -7,6 +7,10 @@ const eventSchema = new Schema({
   category: {
     type: Schema.Types.ObjectId,
     ref: 'Category' },
+  complete: {
+    type: Boolean,
+    default: false
+  },
   status: {
     type: String,
     enum: ['published', 'draft'],

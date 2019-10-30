@@ -32,6 +32,7 @@
     }
   }
   &.complete {
+    color: #9a9b9b;
     .event-description {
       text-decoration: line-through;
       &:before {
