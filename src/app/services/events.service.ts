@@ -10,25 +10,30 @@ import * as moment from 'moment';
 })
 
 export class EventsService {
-  private  groupedEvents = new BehaviorSubject<GroupedEvents|null>(null);
+  private groupedEvents$ = new BehaviorSubject<GroupedEvents|null>(null);
+  private events$ = new BehaviorSubject<Event[]|null>(null);
   constructor( private http: HttpClient) { }
 
   getEvents(): Observable<Event[]> {
-    return this.http.get('http://localhost:3000/events').pipe(
-      map( (resp: {message: string, events: Event[]}) => {
-        this.groupEvents(resp.events);
-        return resp.events;
-      })
-    );
+    if (this.events$.value !== null) {
+      return this.events$;
+    } else {
+      return this.http.get('http://localhost:3000/events').pipe(
+        map( (resp: {message: string, events: Event[]}) => {
+          this.groupEvents(resp.events);
+          this.events$.next(resp.events);
+          return resp.events;
+        })
+      );
+    }
   }
 
   getGroupedEvents(): Observable<GroupedEvents> {
-    this.getEvents().subscribe();
-    return this.groupedEvents;
+    return this.groupedEvents$;
   }
 
   private groupEvents(events: Event[]): void {
-    this.groupedEvents.next(
+    this.groupedEvents$.next(
       events.reduce(
         (groupedEvents, event) => {
           if ( moment(event.startDate).format('YYYY-MM-DD') in groupedEvents) {

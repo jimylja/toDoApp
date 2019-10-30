@@ -1,3 +1,10 @@
-<ng-container *ngIf="(events$ | async) as events">
-  <app-event *ngFor="let event of events" [event]="event"></app-event>
-</ng-container>
+<main class="container event-block">
+  <h3 class="font-weight-bold text-center">This month</h3>
+  <section class="row">
+    <ng-container *ngIf="(events$ | async) as events">
+      <ul class="offset-md-2 col-md-8 p-0">
+        <app-event *ngFor="let event of events" [event]="event"></app-event>
+      </ul>
+    </ng-container>
+  </section>
+</main>
