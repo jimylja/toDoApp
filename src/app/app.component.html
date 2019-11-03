@@ -1,24 +1,26 @@
-<header class="container">
-  <h1 class="text-center text-uppercase py-3 font-weight-bolder">TTD</h1>
-</header>
+<div class="top-block container-fluid position-fixed">
+  <header class="container">
+    <h1 class="text-center text-uppercase py-3 font-weight-bolder">TTD</h1>
+  </header>
 
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 
-<!--  SWITCHERS-->
-<section class="switchers container my-3">
-  <div class="row">
-    <div class="col">
-      <div class="custom-control px-0">
-        <input type="radio" id="customRadio1" checked name="customRadio" class="d-none custom-control-input">
-        <label class="switcher-label text-center" for="customRadio1">Monthly</label>
-      </div>
-      <div class="custom-control px-0">
-        <input type="radio" id="customRadio2" name="customRadio" class="d-none custom-control-input">
-        <label class="switcher-label text-center active" for="customRadio2">Daily</label>
+  <!--  SWITCHERS-->
+  <section class="switchers container my-3">
+    <div class="row">
+      <div class="col">
+        <div class="custom-control px-0">
+          <input type="radio" id="customRadio1" checked name="customRadio" class="d-none custom-control-input">
+          <label class="switcher-label text-center" for="customRadio1">Monthly</label>
+        </div>
+        <div class="custom-control px-0">
+          <input type="radio" id="customRadio2" name="customRadio" class="d-none custom-control-input">
+          <label class="switcher-label text-center active" for="customRadio2">Daily</label>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<app-calendar></app-calendar>
+  <app-calendar></app-calendar>
+</div>
 <app-event-list></app-event-list>
