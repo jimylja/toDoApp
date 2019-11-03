@@ -12,22 +12,21 @@ import * as moment from 'moment';
 export class CalendarComponent implements OnInit {
 
   today = moment();
-  displayedMonth: moment.Moment;
+  monthFirstDay: moment.Moment;
   groupedEvents$: Observable<GroupedEvents>;
   moment: any = moment;
 
   constructor( private eventService: EventsService) { }
 
   ngOnInit() {
-    this.displayedMonth = this.today.clone().startOf('month');
-    this.groupedEvents$ = this.eventService.getGroupedEvents();
+    this.groupedEvents$ = this.eventService.eventsForDisplay$;
   }
 
   /**
    * return's dates for displayed month
    */
   get calendar(): Array<Array<moment.Moment>> {
-    return this.getMonthCalendar(this.displayedMonth.month(), this.displayedMonth.year());
+    return this.getMonthCalendar(this.eventService.activeMonth$.value, this.eventService.activeYear$.value);
   }
 
   /**
@@ -37,9 +36,9 @@ export class CalendarComponent implements OnInit {
    * @returns array - array of dates grouped by weeks
    */
   getMonthCalendar(month: number, year: number) {
-    const firstDay = moment([year, month, 1]);
-    const lastDay = firstDay.clone().endOf('month');
-    let monday = firstDay.clone().startOf('isoWeek');
+    this.monthFirstDay = moment([year, month, 1]);
+    const lastDay = this.monthFirstDay.clone().endOf('month');
+    let monday = this.monthFirstDay.clone().startOf('isoWeek');
     const displayedWeeks = lastDay.diff(monday, 'weeks');
 
     const monthDates = [];
@@ -54,11 +53,11 @@ export class CalendarComponent implements OnInit {
     return monthDates;
   }
 
-  displayNextMonth(): void {
-    this.displayedMonth = this.displayedMonth.add(1, 'month');
-  }
-
-  displayPreviousMonth(): void {
-    this.displayedMonth = this.displayedMonth.subtract(1, 'month');
+  /**
+   * changes the active month
+   * @param direction number - next month: 1; previous month: -1
+   */
+  changeMonth(direction: 1 | -1): void {
+    this.eventService.changeMonth(direction);
   }
 }

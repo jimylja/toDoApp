@@ -10,10 +10,11 @@ import {Event, GroupedEvents} from '../models/event';
 })
 export class EventListComponent implements OnInit {
 
-  events$: Observable<Event[]>;
+  events$: Observable<GroupedEvents>;
   constructor(private eventService: EventsService) { }
 
   ngOnInit() {
-    this.events$ = this.eventService.getEvents();
+    this.eventService.getEventsForMonth();
+    this.events$ = this.eventService.eventsForDisplay$;
   }
 }

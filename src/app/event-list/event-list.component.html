@@ -3,7 +3,10 @@
   <section class="row">
     <ng-container *ngIf="(events$ | async) as events">
       <ul class="offset-md-2 col-md-8 p-0">
-        <app-event *ngFor="let event of events" [event]="event"></app-event>
+        <ng-container *ngFor="let day of events | keyvalue">
+          <div> {{day.key}}</div>
+          <app-event *ngFor="let event of day.value.events | keyvalue" [event]="event.value"></app-event>
+        </ng-container>
       </ul>
     </ng-container>
   </section>
