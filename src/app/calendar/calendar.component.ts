@@ -19,7 +19,7 @@ export class CalendarComponent implements OnInit {
   constructor( private eventService: EventsService) { }
 
   ngOnInit() {
-    this.groupedEvents$ = this.eventService.eventsForDisplay$;
+    this.groupedEvents$ = this.eventService.activeMonthEvents$;
   }
 
   /**

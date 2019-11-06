@@ -7,6 +7,6 @@ import * as moment from 'moment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'toDo';
+  monthlyView = true;
   constructor() { moment.locale('uk'); }
 }

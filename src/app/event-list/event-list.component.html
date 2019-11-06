@@ -6,7 +6,9 @@
     <ng-container *ngIf="(events$ | async) as events">
       <ul class="offset-md-2 col-md-8 p-3">
         <ng-container *ngFor="let day of events | keyvalue">
-          <div> {{day.key}}</div>
+          <div>
+            <time [attr.datetime]="day.key">{{day.key}}</time>
+          </div>
           <app-event *ngFor="let event of day.value.events | keyvalue" [event]="event.value"></app-event>
         </ng-container>
       </ul>

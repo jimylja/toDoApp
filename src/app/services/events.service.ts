@@ -12,11 +12,18 @@ import * as moment from 'moment';
 export class EventsService {
   private today = moment();
   private eventsStorage$ = new BehaviorSubject<GroupedEvents[]|null>([].fill(null, 0, 11));
-  eventsForDisplay$ = new BehaviorSubject<GroupedEvents|null>(null);
-  activeMonth$ = new BehaviorSubject<number>(this.today.month());
-  activeYear$ = new BehaviorSubject<number>(this.today.year());
+  monthlyMode$ = new BehaviorSubject<boolean>(true);
+  activeMonthEvents$ = new BehaviorSubject<GroupedEvents|null>(null);
+  activeDayEvents$ = new BehaviorSubject<GroupedEvents|null>(null);
 
+  activeYear$ = new BehaviorSubject<number>(this.today.year());
+  activeMonth$ = new BehaviorSubject<number>(this.today.month());
+  activeDate$ = new BehaviorSubject<moment.Moment>(this.today);
   constructor( private http: HttpClient) { }
+
+  get eventsForDisplay$() {
+    return this.monthlyMode$.value ? this.activeMonthEvents$ : this.activeDayEvents$;
+  }
 
   /**
    * return's events for active month
@@ -30,10 +37,10 @@ export class EventsService {
       },
     }).pipe(
       map( (resp: {message: string, events: Event[]}) => {
-        const grEvents = this.groupEventsByDay(resp.events);
-        this.updateEventsStorage(grEvents);
-        this.eventsForDisplay$.next(grEvents);
-        return grEvents;
+        const eventsForMonth = this.groupEventsByDay(resp.events);
+        this.updateEventsStorage(eventsForMonth);
+        this.updateEventsForDisplay(eventsForMonth);
+        return eventsForMonth;
       })
     );
   }
@@ -65,9 +72,9 @@ export class EventsService {
    * gets events for active month from server of from cash
    */
   getEventsForMonth(): any {
-    const groupedEvents = this.eventsStorage$.value[this.activeMonth$.value];
-    if (groupedEvents !== undefined) {
-      this.eventsForDisplay$.next(groupedEvents);
+    const eventsForMonth = this.eventsStorage$.value[this.activeMonth$.value];
+    if (eventsForMonth !== undefined) {
+      this.updateEventsForDisplay(eventsForMonth);
     } else {
       this.getEvents().subscribe();
     }
@@ -101,6 +108,16 @@ export class EventsService {
     const currentData = this.eventsStorage$.value;
     currentData[this.activeMonth$.value] = events;
     this.eventsStorage$.next(currentData);
+  }
+
+  /**
+   * updates events for active month and active date
+   * @params eventsForMonth - array of grouped by date events
+   */
+  private updateEventsForDisplay(eventsForMonth: GroupedEvents): void {
+    const activeDate =   this.activeDate$.value.format('YYYY-MM-DD');
+    this.activeMonthEvents$.next(eventsForMonth);
+    this.activeDayEvents$.next({[activeDate]: eventsForMonth[activeDate]});
   }
 
 }
