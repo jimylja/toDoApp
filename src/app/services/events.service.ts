@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Event, GroupedEvents } from '../models/event';
-import { map } from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
 import * as moment from 'moment';
 
@@ -14,7 +14,6 @@ export class EventsService {
   private eventsStorage$ = new BehaviorSubject<GroupedEvents[]|null>([].fill(null, 0, 11));
   monthlyMode$ = new BehaviorSubject<boolean>(true);
   activeMonthEvents$ = new BehaviorSubject<GroupedEvents|null>(null);
-  activeDayEvents$ = new BehaviorSubject<GroupedEvents|null>(null);
 
   activeYear$ = new BehaviorSubject<number>(this.today.year());
   activeMonth$ = new BehaviorSubject<number>(this.today.month());
@@ -23,6 +22,17 @@ export class EventsService {
 
   get eventsForDisplay$() {
     return this.monthlyMode$.value ? this.activeMonthEvents$ : this.activeDayEvents$;
+  }
+
+  get activeDayEvents$(): Observable<GroupedEvents> {
+    return this.activeDate$.pipe(
+      switchMap( (date: moment.Moment) => this.activeMonthEvents$.pipe(
+        map( events => {
+          const activeDate = date.format('YYYY-MM-DD');
+          return {[activeDate]: events[activeDate]};
+        })
+      ))
+    );
   }
 
   /**
@@ -39,7 +49,7 @@ export class EventsService {
       map( (resp: {message: string, events: Event[]}) => {
         const eventsForMonth = this.groupEventsByDay(resp.events);
         this.updateEventsStorage(eventsForMonth);
-        this.updateEventsForDisplay(eventsForMonth);
+        this.activeMonthEvents$.next(eventsForMonth);
         return eventsForMonth;
       })
     );
@@ -74,7 +84,7 @@ export class EventsService {
   getEventsForMonth(): any {
     const eventsForMonth = this.eventsStorage$.value[this.activeMonth$.value];
     if (eventsForMonth !== undefined) {
-      this.updateEventsForDisplay(eventsForMonth);
+      this.activeMonthEvents$.next(eventsForMonth);
     } else {
       this.getEvents().subscribe();
     }
@@ -108,16 +118,6 @@ export class EventsService {
     const currentData = this.eventsStorage$.value;
     currentData[this.activeMonth$.value] = events;
     this.eventsStorage$.next(currentData);
-  }
-
-  /**
-   * updates events for active month and active date
-   * @params eventsForMonth - array of grouped by date events
-   */
-  private updateEventsForDisplay(eventsForMonth: GroupedEvents): void {
-    const activeDate =   this.activeDate$.value.format('YYYY-MM-DD');
-    this.activeMonthEvents$.next(eventsForMonth);
-    this.activeDayEvents$.next({[activeDate]: eventsForMonth[activeDate]});
   }
 
 }

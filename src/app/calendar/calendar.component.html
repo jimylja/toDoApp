@@ -15,7 +15,8 @@
         <div *ngFor="let week of calendar" class="d-table-row dates">
           <div *ngFor="let day of week" class="d-table-cell"
                [ngClass]="{ 'past-day': !day.isSame(monthFirstDay, 'month'),
-                            'current-day': day.isSame(today, 'day')}">
+                            'current-day': day.isSame(today, 'day')}"
+               (click) = "changeActiveDate(day)">
             <time [attr.datetime]="day.format('YYYY-MM-DD')">{{day.format('DD')}}</time>
             <ng-container *ngIf="(groupedEvents$ | async) as events">
               <div class="event-marks" *ngIf="events[day.format('YYYY-MM-DD')]">

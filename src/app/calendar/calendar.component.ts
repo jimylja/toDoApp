@@ -60,4 +60,12 @@ export class CalendarComponent implements OnInit {
   changeMonth(direction: 1 | -1): void {
     this.eventService.changeMonth(direction);
   }
+
+  /**
+   * changes the active date
+   * @param day moment.Moment - Moment object with selected date
+   */
+  changeActiveDate(day) {
+    this.eventService.activeDate$.next(day);
+  }
 }
