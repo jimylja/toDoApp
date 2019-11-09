@@ -10,13 +10,15 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { EventListComponent } from './event-list/event-list.component';
 import { EventComponent } from './event-list/event/event.component';
 import {FormsModule} from '@angular/forms';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
     EventListComponent,
-    EventComponent
+    EventComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

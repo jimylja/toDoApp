@@ -1,10 +1,7 @@
-<div class="top-block container-fluid position-fixed">
+<div class="top-section">
   <header class="container">
     <h1 class="text-center text-uppercase py-3 font-weight-bolder">TTD</h1>
   </header>
-
-  <router-outlet></router-outlet>
-  <!--  SWITCHERS-->
   <section class="switchers container my-3">
     <div class="row">
       <div class="col">
@@ -20,5 +17,7 @@
     </div>
   </section>
   <app-calendar></app-calendar>
+  <h3 class="font-weight-bold text-center py-2 date">This month</h3>
 </div>
 <app-event-list [viewMode]="monthlyView"></app-event-list>
+<app-footer></app-footer>

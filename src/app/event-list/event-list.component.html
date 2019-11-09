@@ -1,14 +1,9 @@
 <main class="container event-block">
-  <div class="container date">
-    <h3 class="font-weight-bold text-center">This month</h3>
-  </div>
   <section class="row events">
     <ng-container *ngIf="(events$ | async) as events">
-      <ul class="offset-md-2 col-md-8 p-3">
+      <ul class="offset-md-2 col-md-8 p-3" #dates>
         <ng-container *ngFor="let day of events | keyvalue">
-          <div>
-            <time [attr.datetime]="day.key">{{day.key}}</time>
-          </div>
+            <time class="sticky-date" [attr.datetime]="day.key">{{day.key}}</time>
           <app-event *ngFor="let event of day.value.events | keyvalue" [event]="event.value"></app-event>
         </ng-container>
       </ul>

@@ -1,5 +1,5 @@
 $bg-color: #f8fbfc;
 
-body {
-  background-color: $bg-color!important;
+::ng-deep body {
+  background-color: $bg-color;
 }
