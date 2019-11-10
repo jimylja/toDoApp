@@ -14,12 +14,14 @@ export class CalendarComponent implements OnInit {
   today = moment();
   monthFirstDay: moment.Moment;
   groupedEvents$: Observable<GroupedEvents>;
-  moment: any = moment;
+  activeDate$: Observable<moment.Moment>;
+    moment: any = moment;
 
   constructor( private eventService: EventsService) { }
 
   ngOnInit() {
     this.groupedEvents$ = this.eventService.activeMonthEvents$;
+    this.activeDate$ = this.eventService.activeDate$;
   }
 
   /**

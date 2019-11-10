@@ -33,17 +33,19 @@
   }
   .dates {
     .d-table-cell {
-      &:hover {
+      &:hover, &.current-day {
         cursor: pointer;
+        font-weight: bold;
         background-color: $bg-color;
         text-decoration: underline;
       }
+      &.active {
+        font-weight: bold;
+        background-color: #fbecfc;
+      }
+      &.past-day { color: #9a9b9b; }
     }
-    & .current-day {
-      font-weight: bold;
-      background-color: #fbecfc;
-    }
-    & .past-day { color: #9a9b9b; }
+
     .event-marks {
       width: 100%;
       display: flex;

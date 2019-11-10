@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import * as moment from 'moment';
+import { EventsService } from './services/events.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,6 @@ import * as moment from 'moment';
 })
 export class AppComponent {
   monthlyView = true;
-  constructor() { moment.locale('uk'); }
+  activeDate = this.eventService.activeDate$;
+  constructor(private eventService: EventsService) { moment.locale('uk'); }
 }

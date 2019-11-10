@@ -20,7 +20,7 @@ export class EventsService {
   activeDate$ = new BehaviorSubject<moment.Moment>(this.today);
   constructor( private http: HttpClient) { }
 
-  get eventsForDisplay$() {
+  get eventsForDisplay$(): Observable<GroupedEvents | null> {
     return this.monthlyMode$.value ? this.activeMonthEvents$ : this.activeDayEvents$;
   }
 
@@ -29,7 +29,11 @@ export class EventsService {
       switchMap( (date: moment.Moment) => this.activeMonthEvents$.pipe(
         map( events => {
           const activeDate = date.format('YYYY-MM-DD');
-          return {[activeDate]: events[activeDate]};
+          if (activeDate in events) {
+            return {[activeDate]: events[activeDate]};
+          } else {
+            return null;
+          }
         })
       ))
     );

@@ -10,6 +10,7 @@ import {
 import { EventsService } from '../services/events.service';
 import { Observable } from 'rxjs';
 import { GroupedEvents } from '../models/event';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-event-list',
@@ -18,7 +19,7 @@ import { GroupedEvents } from '../models/event';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventListComponent implements OnInit, OnChanges {
-  @Input() viewMode: boolean;
+  @Input() monthlyView: boolean;
   @ViewChild('dates', {static: false}) dates: ElementRef;
   events$: Observable<GroupedEvents>;
   constructor(private eventService: EventsService) { }
@@ -26,20 +27,27 @@ export class EventListComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.eventService.getEventsForMonth();
     this.eventService.activeDate$.subscribe(
-      date => {
-        if (this.dates) {
-          console.log(' change date');
-          const activeDate = date.format('YYYY-MM-DD');
-          console.log(activeDate);
-          const el = this.dates.nativeElement.querySelector('[datetime="2019-10-23"]');
-          el.scrollIntoView({behavior: 'smooth'});
-        }
+      activeDate => {
+        if (this.dates && this.monthlyView) { this.scrollViewToDate(activeDate); }
       }
     );
   }
 
   ngOnChanges() {
-    this.eventService.monthlyMode$.next(this.viewMode);
+    this.eventService.monthlyMode$.next(this.monthlyView);
     this.events$  = this.eventService.eventsForDisplay$;
+  }
+
+  private scrollViewToDate(activeDate: moment.Moment): void {
+    const date = activeDate.format('YYYY-MM-DD');
+    const curDateElem = this.dates.nativeElement.querySelector(`[datetime="${date}"]`);
+    if (curDateElem) {
+      const toPos = curDateElem.offsetTop - window.pageYOffset;
+      if (toPos < 0) {
+        document.documentElement.scrollTop = toPos;
+      } else {
+        document.documentElement.scrollTop = curDateElem.offsetTop + 34;
+      }
+    }
   }
 }

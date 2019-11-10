@@ -17,7 +17,8 @@
     </div>
   </section>
   <app-calendar></app-calendar>
-  <h3 class="font-weight-bold text-center py-2 date">This month</h3>
+  <h3 *ngIf="monthlyView" class="font-weight-bold text-center py-2 date">{{activeDate | async | date: 'MMMM'}}</h3>
+  <h3 *ngIf="!monthlyView" class="font-weight-bold text-center py-2 date">{{activeDate | async | date: 'EEEE-dd.MM.yy'}}</h3>
 </div>
-<app-event-list [viewMode]="monthlyView"></app-event-list>
+<app-event-list [monthlyView]="monthlyView"></app-event-list>
 <app-footer></app-footer>
