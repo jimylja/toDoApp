@@ -27,7 +27,7 @@ router.get("/:month?:year?", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/", (req, res) => {
   Event.findByIdAndRemove(req.query.id, (err, event) => {
     if (err) return res.status(500).send(err);
     return res.status(200).json({
@@ -37,8 +37,8 @@ router.delete("/:id", (req, res) => {
   })
 });
 
-router.put("/:id", (req, res) => {
-  Event.findByIdAndUpdate(req.query.id, req.body, {new: true}, (err, newEvent) => {
+router.put("/", (req, res) => {
+  Event.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, newEvent) => {
     if (err) return res.status(500).send(err);
     return res.json({
       message: "Event was updated successfully!",

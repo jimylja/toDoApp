@@ -5,7 +5,7 @@ const app = express();
 const routes = require('./routes');
 
 //Database connection
-mongoose.connect('mongodb://admin-todo:niBleI_2@ds137368.mlab.com:37368/todo-app', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://admin-todo:niBleI_2@ds137368.mlab.com:37368/todo-app', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
   .then(() => { console.log("Connected to database!"); })
   .catch(() => { console.log("Connection failed!"); });
 mongoose.connection

@@ -124,4 +124,24 @@ export class EventsService {
     this.eventsStorage$.next(currentData);
   }
 
+  /**
+   * updates event on server
+   * @params event - object with updated data
+   * @return - updated event
+   */
+  updateEvent(event: Event): Observable<Event> {
+    return this.http.put('http://localhost:3000/events', event).pipe(
+      map((resp: {message: string, event: Event}) => {
+        return resp.event;
+      })
+    );
+  }
+
+  /**
+   * delete event on server
+   * @params event - object with updated data
+   */
+  deleteEvent(id: string): Observable<any> {
+    return this.http.delete(`http://localhost:3000/events`, {params: {id}});
+  }
 }
