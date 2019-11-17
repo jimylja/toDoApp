@@ -14,6 +14,7 @@ router.get("/:month?:year?", (req, res) => {
   const year = req.query.year ? Number(req.query.year) : new Date().getMonth();
 
   Event.find({
+    status: 'published',
     startDate: {
       $gt: new Date(year, month,1, 0, 0),
       $lt: new Date(year,month+1,0, 23, 59)}

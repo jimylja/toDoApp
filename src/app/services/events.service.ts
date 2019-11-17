@@ -115,16 +115,6 @@ export class EventsService {
   }
 
   /**
-   * updates local cash of events
-   * @params events - array of  grouped by date events
-   */
-  private updateEventsStorage(events: GroupedEvents): void {
-    const currentData = this.eventsStorage$.value;
-    currentData[this.activeMonth$.value] = events;
-    this.eventsStorage$.next(currentData);
-  }
-
-  /**
    * updates event on server
    * @params event - object with updated data
    * @return - updated event
@@ -141,7 +131,41 @@ export class EventsService {
    * delete event on server
    * @params event - object with updated data
    */
-  deleteEvent(id: string): Observable<any> {
+  deleteEvent(event: Event): Observable<any> {
+    this.updateEventsStorage(event, true);
+    const id = event._id;
     return this.http.delete(`http://localhost:3000/events`, {params: {id}});
+  }
+
+  /**
+   * updates local cash of events
+   * @params events - array of  grouped by date events
+   */
+  private updateEventsStorage(events: GroupedEvents|Event, isDeleteAction?: boolean): void {
+    const storageData = this.eventsStorage$.value;
+    if (events.hasOwnProperty('_id')) {
+      const event = events as Event;
+      const eventDate = moment(event.startDate).format('YYYY-MM-DD');
+      const monthlyEvents = storageData[this.activeMonth$.value];
+      let dailyEvents: Array<Event>;
+      if (isDeleteAction) {
+        dailyEvents = monthlyEvents[eventDate].events.filter( item => item._id !== event._id );
+      } else {
+        dailyEvents = monthlyEvents[eventDate].events.map( item => item._id === event._id ? event : item );
+      }
+
+      if (dailyEvents.length === 0) {
+        delete monthlyEvents[eventDate];
+        if (Object.entries(monthlyEvents).length === 0) {
+          storageData.splice(this.activeMonth$.value, 1);
+        }
+      } else {
+        storageData[this.activeMonth$.value][eventDate].events = dailyEvents;
+      }
+      events = storageData[this.activeMonth$.value];
+    }
+
+    storageData[this.activeMonth$.value] = events as GroupedEvents;
+    this.eventsStorage$.next(storageData);
   }
 }

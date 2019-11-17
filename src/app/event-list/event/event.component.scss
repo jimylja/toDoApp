@@ -17,6 +17,7 @@
     padding-left: 30px;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
     &:before {
       content: '✓';
       display: block;
