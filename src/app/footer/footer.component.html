@@ -10,60 +10,6 @@
   </div>
 </footer>
 
-<app-add-event [popupConfig]="popupConfig">
-  <form>
-    <div class="form-group text-center">
-      <label for="task-title">Add new task</label>
-      <input type="text" class="form-control" id="task-title" placeholder="Title of event">
-    </div>
-
-    <div class="form-group d-flex flex-row flex-nowrap justify-content-center categories">
-      <div *ngFor="let category of [0,1,2,3]; let i=index" class="custom-control custom-control-inline px-0 mx-0">
-        <input type="radio" (change)="true" #category id="{{i}}" name="customRadioInline1">
-        <label for="{{i}}" class="d-flex flex-row flex-nowrap align-items-center m-0">
-          <span *ngIf="!category.checked" class="category-mark" style="background-color: red;"></span>
-          <span>category</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="exampleFormControlTextarea1" class="d-none">Description</label>
-      <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="description" rows="3"></textarea>
-    </div>
-
-    <div class="form-group">
-      <p class="m-0">Choose date</p>
-      <input type="checkbox" (change)="true" id="datePicker" #displayPickers  class="invisible" name="scales">
-      <label for="datePicker" class="font-weight-bolder">Scales
-        <div class="arrow" [ngClass]="!displayPickers.checked ? 'down' : 'up'"></div>
-      </label>
-      <div class="range-picker container" *ngIf="displayPickers.checked">
-        <div class="row mx-auto p-0 p-sm-1">
-          <label class="col-2 col-sm-2 my-auto" for="eventStart">Start:</label>
-          <div class="col-8 col-sm-6 input-group p-1 my-auto">
-            <input class="form-control" placeholder="yyyy-mm-dd" id="eventStart" name="event-start" ngbDatepicker #d="ngbDatepicker">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-            </div>
-          </div>
-          <ngb-timepicker class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
-        </div>
-        <div class="row mx-auto p-0 p-sm-1">
-          <label class="col-2 col-sm-2 my-auto" for="eventEnd">End:</label>
-          <div class="col-8 col-sm-6 input-group p-1 my-auto">
-            <input class="form-control" placeholder="yyyy-mm-dd" id="eventEnd" name="event-start" ngbDatepicker #d="ngbDatepicker">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-            </div>
-          </div>
-          <ngb-timepicker class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group text-center">
-      <button type="submit" class="btn btn-primary mb-2">Add task</button>
-    </div>
-  </form>
-</app-add-event>
+<app-popup [popupConfig]="popupConfig">
+  <app-add-event></app-add-event>
+</app-popup>
