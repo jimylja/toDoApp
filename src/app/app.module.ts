@@ -12,6 +12,7 @@ import { EventListComponent } from './event-list/event-list.component';
 import { EventComponent } from './event-list/event/event.component';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from './footer/footer.component';
+import { AddEventModule } from './add-event/add-event.module';
 
 import * as Hammer from 'hammerjs';
 export class MyHammerConfig extends HammerGestureConfig {
@@ -34,7 +35,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    AddEventModule
   ],
   providers: [{
     provide: HAMMER_GESTURE_CONFIG,

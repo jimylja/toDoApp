@@ -1,0 +1,9 @@
+<div *ngIf="popupConfig.isOpen" class="shade" [@openCloseShade]="popupConfig.isOpen ? 'open' : 'closed'">&nbsp;</div>
+<div *ngIf="popupConfig.isOpen" [@openClose]="popupConfig.isOpen ? 'open' : 'closed'" class="pop-up container">
+  <div class="pop-up-box flex-basis-0 offset-md-2 col-md-8 p-3">
+    <div class="d-flex justify-content-center pb-5">
+      <div (click)="closePopup()" class="add-event-button align-middle">X</div>
+    </div>
+    <ng-content></ng-content>
+  </div>
+</div>
