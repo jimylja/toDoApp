@@ -79,6 +79,7 @@ export class EventsService {
         this.activeYear$.next(curYear - 1);
       }
     }
+    this.activeDate$.next(moment([this.activeYear$.value, this.activeMonth$.value, 1]));
     this.getEventsForMonth();
   }
 
@@ -167,5 +168,17 @@ export class EventsService {
 
     storageData[this.activeMonth$.value] = events as GroupedEvents;
     this.eventsStorage$.next(storageData);
+  }
+
+  /**
+   * create new event on server
+   * @params eventData - object with data for new event
+   */
+  addEvent(eventData): void {
+    this.http.post(`http://localhost:3000/events`, eventData).pipe(
+      map((resp: {message: string, event: Event}) => resp.event)
+    ).subscribe(
+      event => this.updateEventsStorage(event)
+    );
   }
 }

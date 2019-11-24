@@ -25,6 +25,12 @@ form {
       background-size: 23px;
       background-position: center;
     }
+    &.closed {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    position: absolute;
+    }
   }
 
   .categories {

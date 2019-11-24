@@ -33,7 +33,7 @@
     <label for="datePicker" class="font-weight-bolder">Scales
       <div class="arrow" [ngClass]="!displayPickers.checked ? 'down' : 'up'"></div>
     </label>
-    <div class="range-picker container" *ngIf="displayPickers.checked">
+    <div class="range-picker container" [ngClass]="!displayPickers.checked ? 'closed':''">
       <div class="row mx-auto p-0 p-sm-1">
         <label class="col-2 col-sm-2 my-auto" for="eventStart">Start:</label>
         <div class="col-8 col-sm-6 input-group p-1 my-auto">
@@ -42,7 +42,7 @@
             <button class="btn btn-outline-secondary calendar" (click)="start.toggle()" type="button"></button>
           </div>
         </div>
-        <ngb-timepicker class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
+        <ngb-timepicker formControlName="startTime" class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
       </div>
       <div class="row mx-auto p-0 p-sm-1">
         <label class="col-2 col-sm-2 my-auto" for="eventEnd">End:</label>
@@ -52,7 +52,7 @@
             <button class="btn btn-outline-secondary calendar" (click)="end.toggle()" type="button"></button>
           </div>
         </div>
-        <ngb-timepicker class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
+        <ngb-timepicker formControlName="endTime" class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
       </div>
     </div>
   </div>
