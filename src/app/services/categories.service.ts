@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../models/category';
-import {map, switchMap} from 'rxjs/operators';
-import {BehaviorSubject, Observable} from 'rxjs';
-import * as moment from 'moment';
-import {Event} from '../models/event';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

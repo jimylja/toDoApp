@@ -122,12 +122,15 @@ router.put("/", (req, res) => {
     startDate: startDate,
     endDate: endDate,
   });
-  newEvent.save((err, newEvent) => {
+  newEvent.save((err, event) => {
     if (err) return res.status(500).send(err);
-    return res.status(201).json({
-      message: "Event was created successfully!",
-      event: newEvent
-    });
+    Event.populate(event, {path: "category"}, (err, event) => {
+      return res.status(201).json({
+        message: "Event was created successfully!",
+        event: event
+      });
+    } );
+
   })
 });
 

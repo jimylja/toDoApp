@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterComponent } from './footer.component';
+import { PopupComponent } from '../popup/popup.component';
+import { AddEventComponent } from '../add-event/add-event.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbTimepicker, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -8,7 +12,8 @@ describe('FooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FooterComponent ]
+      imports: [FormsModule, ReactiveFormsModule, NgbDatepickerModule],
+      declarations: [ FooterComponent, PopupComponent, AddEventComponent, NgbTimepicker,  ]
     })
     .compileComponents();
   }));

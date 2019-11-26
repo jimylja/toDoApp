@@ -5,7 +5,7 @@ import { Category } from '../models/category';
 import { Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
-import {tap} from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 export interface EventDate {
   year: number;
@@ -23,9 +23,10 @@ export interface EventDate {
 })
 export class AddEventComponent implements OnInit {
 
-  constructor( private categoriesService: CategoriesService, private eventService: EventsService, private fb: FormBuilder) { }
-  activeDate = this.eventService.activeDate$.value;
+  constructor(private categoriesService: CategoriesService, private eventService: EventsService, private fb: FormBuilder) { }
 
+  categories$: Observable<Category[]>;
+  activeDate = this.eventService.activeDate$.value;
   newEventForm = this.fb.group({
     title: ['', Validators.required],
     description: ['', Validators.required],
@@ -35,7 +36,6 @@ export class AddEventComponent implements OnInit {
     endTime: [this.getDateObj(this.eventEnd)],
     category: ['']
   });
-  categories$: Observable<Category[]>;
 
   get eventStart(): moment.Moment {
     return this.activeDate.set({hour: moment().get('hour'), minute: moment().get('minute')});
@@ -57,7 +57,7 @@ export class AddEventComponent implements OnInit {
     this.eventService.addEvent(this.newEventForm.value);
   }
 
-  private getDateObj(date: moment.Moment): EventDate {
+  getDateObj(date: moment.Moment): EventDate {
     return {
       year: date.get('year'),
       month: date.get('month'),
