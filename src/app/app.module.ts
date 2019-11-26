@@ -10,10 +10,12 @@ import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { EventListComponent } from './event-list/event-list.component';
 import { EventComponent } from './event-list/event/event.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './footer/footer.component';
+import { PopupModule } from './popup/popup.module';
 
 import * as Hammer from 'hammerjs';
+import { AddEventComponent } from './add-event/add-event.component';
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = {
     swipe: { direction: Hammer.DIRECTION_ALL }
@@ -26,7 +28,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     CalendarComponent,
     EventListComponent,
     EventComponent,
-    FooterComponent
+    FooterComponent,
+    AddEventComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
-    FormsModule
+    FormsModule, ReactiveFormsModule,
+    PopupModule
   ],
   providers: [{
     provide: HAMMER_GESTURE_CONFIG,

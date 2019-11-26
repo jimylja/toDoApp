@@ -1,6 +1,6 @@
-<main class="container event-block">
+<main *ngIf="(events$ | async) as events; else Loading" class="container event-block">
   <section class="row events">
-    <ul *ngIf="(events$ | async) as events; else noEvents" class="offset-md-2 col-md-8 p-3" #dates>
+    <ul *ngIf="(events | json) != '{}'; else noEvents" class="offset-md-2 col-md-8 p-3" #dates>
       <ng-container *ngFor="let day of events | keyvalue">
         <time class="sticky-date" *ngIf="monthlyView" [attr.datetime]="day.key">{{day.key}}</time>
         <app-event *ngFor="let event of day.value.events | keyvalue" [event]="event.value"></app-event>
@@ -10,7 +10,13 @@
 </main>
 
 <ng-template #noEvents>
-  <div class="offset-md-2 col-md-8 p-3">
-    None event was arranged
+  <div class="offset-md-2 col-md-8 p-3 text-center">
+    Any event was arranged
   </div>
+</ng-template>
+
+<ng-template #Loading>
+  <main class="offset-md-2 col-md-8 p-3 text-center">
+    Waiting for data...
+  </main>
 </ng-template>

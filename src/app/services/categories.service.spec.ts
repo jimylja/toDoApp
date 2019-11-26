@@ -1,16 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { EventsService } from './events.service';
+import { CategoriesService } from './categories.service';
 
-describe('EventsService', () => {
+describe('CategoriesService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    providers: [EventsService],
+    providers: [CategoriesService],
     imports: [HttpClientTestingModule]
-  }));
+    }
+  ));
 
   it('should be created', () => {
-    const service: EventsService = TestBed.get(EventsService);
+    const service: CategoriesService = TestBed.get(CategoriesService);
     expect(service).toBeTruthy();
   });
 });

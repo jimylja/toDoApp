@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ElementRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { ElementRef, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { EventsService } from '../services/events.service';
 import { Observable } from 'rxjs';
 import { GroupedEvents } from '../models/event';
@@ -16,7 +8,6 @@ import * as moment from 'moment';
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventListComponent implements OnInit, OnChanges {
   @Input() monthlyView: boolean;
@@ -26,6 +17,7 @@ export class EventListComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.eventService.getEventsForMonth();
+    this.events$ = this.eventService.eventsForDisplay$;
     this.eventService.activeDate$.subscribe(
       activeDate => {
         if (this.dates && this.monthlyView) { this.scrollViewToDate(activeDate); }
@@ -35,7 +27,7 @@ export class EventListComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.eventService.monthlyMode$.next(this.monthlyView);
-    this.events$  = this.eventService.eventsForDisplay$;
+    this.events$ = this.eventService.eventsForDisplay$;
   }
 
   private scrollViewToDate(activeDate: moment.Moment): void {

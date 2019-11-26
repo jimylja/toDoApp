@@ -40,26 +40,6 @@ export class EventsService {
   }
 
   /**
-   * return's events for active month
-   * @returns GroupedEvents - object were events are grouped by date
-   */
-  private getEvents(): Observable<GroupedEvents> {
-    return this.http.get('http://localhost:3000/events', {
-      params: {
-        month: String(this.activeMonth$.value),
-        year: String(this.activeYear$.value)
-      },
-    }).pipe(
-      map( (resp: {message: string, events: Event[]}) => {
-        const eventsForMonth = this.groupEventsByDay(resp.events);
-        this.updateEventsStorage(eventsForMonth);
-        this.activeMonthEvents$.next(eventsForMonth);
-        return eventsForMonth;
-      })
-    );
-  }
-
-  /**
    * updates active month and year
    * @param direction number - next month: 1; previous month: -1
    */
@@ -79,6 +59,7 @@ export class EventsService {
         this.activeYear$.next(curYear - 1);
       }
     }
+    this.activeDate$.next(moment([this.activeYear$.value, this.activeMonth$.value, 1]));
     this.getEventsForMonth();
   }
 
@@ -95,22 +76,22 @@ export class EventsService {
   }
 
   /**
-   * groups's events by date
-   * @params events - array of events
+   * return's events for active month
    * @returns GroupedEvents - object were events are grouped by date
    */
-  private groupEventsByDay(events: Event[]): GroupedEvents {
-    return events.reduce(
-      (groupedEvents, event) => {
-        if ( moment(event.startDate).format('YYYY-MM-DD') in groupedEvents) {
-          groupedEvents[moment(event.startDate).format('YYYY-MM-DD')].events.push(event);
-          groupedEvents[moment(event.startDate).format('YYYY-MM-DD')].categories.add(event.category.color);
-        } else {
-          groupedEvents[moment(event.startDate).format('YYYY-MM-DD')] = {events: [event], categories: new Set([event.category.color])};
-        }
-        return groupedEvents;
+  private getEvents(): Observable<GroupedEvents> {
+    return this.http.get('http://localhost:3000/events', {
+      params: {
+        month: String(this.activeMonth$.value),
+        year: String(this.activeYear$.value)
       },
-      {}
+    }).pipe(
+      map( (resp: {message: string, events: Event[]}) => {
+        const eventsForMonth = this.groupEventsByDay(resp.events);
+        this.updateEventsStorage(eventsForMonth);
+        this.activeMonthEvents$.next(eventsForMonth);
+        return eventsForMonth;
+      })
     );
   }
 
@@ -138,33 +119,71 @@ export class EventsService {
   }
 
   /**
+   * create new event on server
+   * @params eventData - object with data for new event
+   */
+  addEvent(eventData): void {
+    this.http.post(`http://localhost:3000/events`, eventData).pipe(
+      map((resp: {message: string, event: Event}) => resp.event)
+    ).subscribe( event => this.updateEventsStorage(event) );
+  }
+
+  /**
+   * groups's events by date
+   * @params events - array of events
+   * @returns GroupedEvents - object were events are grouped by date
+   */
+  private groupEventsByDay(events: Event[]): GroupedEvents {
+    return events.reduce(
+      (groupedEvents, event) => {
+        if ( moment(event.startDate).format('YYYY-MM-DD') in groupedEvents) {
+          groupedEvents[moment(event.startDate).format('YYYY-MM-DD')].events.push(event);
+          groupedEvents[moment(event.startDate).format('YYYY-MM-DD')].categories.add(event.category.color);
+        } else {
+          groupedEvents[moment(event.startDate).format('YYYY-MM-DD')] = {events: [event], categories: new Set([event.category.color])};
+        }
+        return groupedEvents;
+      },
+      {}
+    );
+  }
+
+  /**
    * updates local cash of events
-   * @params events - array of  grouped by date events
+   * @params events - array of grouped by date events or single event object
+   * @params isDeleteAction - array of grouped by date events or single event object
    */
   private updateEventsStorage(events: GroupedEvents|Event, isDeleteAction?: boolean): void {
     const storageData = this.eventsStorage$.value;
     if (events.hasOwnProperty('_id')) {
       const event = events as Event;
       const eventDate = moment(event.startDate).format('YYYY-MM-DD');
-      const monthlyEvents = storageData[this.activeMonth$.value];
-      let dailyEvents: Array<Event>;
-      if (isDeleteAction) {
-        dailyEvents = monthlyEvents[eventDate].events.filter( item => item._id !== event._id );
+      const monthlyEvents = Object.assign(storageData[this.activeMonth$.value]);
+      const isDateWithoutEvents = !monthlyEvents.hasOwnProperty(eventDate);
+      if (isDateWithoutEvents) {
+        monthlyEvents[eventDate] = {events: [event], categories: new Set([event.category.color])};
       } else {
-        dailyEvents = monthlyEvents[eventDate].events.map( item => item._id === event._id ? event : item );
-      }
-
-      if (dailyEvents.length === 0) {
-        delete monthlyEvents[eventDate];
-        if (Object.entries(monthlyEvents).length === 0) {
-          storageData.splice(this.activeMonth$.value, 1);
+        const currentEventPos = monthlyEvents[eventDate].events.findIndex( item => event._id === item._id);
+        const isUpdateAction = currentEventPos !== -1;
+        if (isDeleteAction) {
+          monthlyEvents[eventDate].events.splice(currentEventPos, 1);
+          if (monthlyEvents[eventDate].events.length === 0 ) {
+            delete monthlyEvents[eventDate];
+            if (Object.entries(monthlyEvents).length === 0) {
+              storageData.splice(this.activeMonth$.value, 1);
+            }
+          }
+        } else {
+          if (isUpdateAction) {
+            monthlyEvents[eventDate].events[currentEventPos] = event;
+          } else {
+            monthlyEvents[eventDate].events.push(event);
+            monthlyEvents[eventDate].categories.add(event.category.color);
+          }
         }
-      } else {
-        storageData[this.activeMonth$.value][eventDate].events = dailyEvents;
       }
-      events = storageData[this.activeMonth$.value];
+      events = monthlyEvents;
     }
-
     storageData[this.activeMonth$.value] = events as GroupedEvents;
     this.eventsStorage$.next(storageData);
   }
