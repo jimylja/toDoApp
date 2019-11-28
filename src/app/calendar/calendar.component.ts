@@ -15,7 +15,7 @@ export class CalendarComponent implements OnInit {
   monthFirstDay: moment.Moment;
   groupedEvents$: Observable<GroupedEvents>;
   activeDate$: Observable<moment.Moment>;
-    moment: any = moment;
+  moment: any = moment;
 
   constructor( private eventService: EventsService) { }
 

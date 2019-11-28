@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 import { Event } from '../../models/event';
 import { EventsService } from '../../services/events.service';
 import {trigger, keyframes, animate, transition, style, state} from '@angular/animations';
@@ -9,48 +9,57 @@ import {trigger, keyframes, animate, transition, style, state} from '@angular/an
   styleUrls: ['./event.component.scss'],
   animations: [
     trigger('eventAnimator', [
-      state('slideOutLeft', style({ display: 'none' })),
+      state('slideOutLeft', style({ display: 'none', opacity: 0 })),
       transition('* => slideOutLeft', animate(1000, keyframes(
         [
           style({ transform: 'translate3d(0, 0, 0)', offset: 0 }),
-          style({ transform: 'translate3d(-150%, 0, 0)', opacity: 0, display: 'none', offset: 1 }),
+          style({ transform: 'translate3d(-150%, 0, 0)', opacity: 1, display: 'none', offset: 1 }),
         ]
       ))),
     ])
   ]
 })
-export class EventComponent implements OnInit {
+export class EventComponent implements OnInit, AfterViewInit {
 
   @Input() event: Event;
-  @ViewChild('EventRef', {static: true}) eventRef: ElementRef;
+  @ViewChildren('EventRef') EventRef: QueryList<ElementRef>;
   animationState: string;
+  eventCard: HTMLDListElement;
 
   constructor(private eventService: EventsService) { }
 
   ngOnInit() {
   }
 
-  completeEvent(event: Event) {
+  ngAfterViewInit() {
+    this.eventCard = this.EventRef.first.nativeElement;
+  }
+
+  completeEvent(event: Event): void {
     event.complete = true;
     this.eventService.updateEvent(event).subscribe();
   }
 
-  deleteEvent(event: Event) {
+  deleteEvent(event: Event): void {
     this.eventService.deleteEvent(event).subscribe();
   }
 
-  moveLeft(moveEvent: any) {
-    this.eventRef.nativeElement.style.transform = `translateX(${moveEvent.deltaX}px)`;
+  moveLeft(moveEvent: any): void {
+    this.eventCard.style.transform = `translateX(${moveEvent.deltaX}px)`;
     if (moveEvent.deltaX < -100 && this.animationState !== 'slideOutLeft') {
       this.startAnimation('slideOutLeft');
     }
   }
 
-  startAnimation(st) {
+  panEnd(): void {
+    this.eventCard.style.transform = `translateX(0px)`;
+  }
+
+  startAnimation(st: string): void {
     if (!this.animationState) {
       this.animationState = st;
       if (this.animationState === 'slideOutLeft') {
-        this.deleteEvent(this.event);
+        setTimeout( () => { this.deleteEvent(this.event); }, 500 );
       }
     }
   }
