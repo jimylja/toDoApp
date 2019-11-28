@@ -36,14 +36,11 @@ li {
     left: 0;
     border-radius: 5px 0 0 5px;
   }
-
-  .event-description {
-    padding-left: 30px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    &:before {
-      content: '✓';
+  .event-complete {
+    input {
+      display: none;
+    }
+    label {
       display: block;
       width: 20px;
       height: 20px;
@@ -52,20 +49,59 @@ li {
       color: #9a9b9b;
       border: 1px solid #9a9b9b;
       border-radius: 50%;
-      position: absolute;
-      left: 5px;
-    }
-  }
-  &.complete {
-    color: #9a9b9b;
-    .event-description {
-      text-decoration: line-through;
-      &:before {
+      margin-bottom: 0;
+      &.complete {
         color: #fff;
         background-color: #39c4a5;
         font-weight: normal;
         border: none;
       }
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
+
+  .event-description {
+    overflow: hidden;
+    position: relative;
+  }
+  &.complete {
+    color: #9a9b9b;
+    .event-description {
+      text-decoration: line-through;
+    }
+  }
+
+  .event-actions {
+    button {
+      width: 16px;
+      height: 24px;
+      background-image: radial-gradient(circle at center, rgba(0,0,0,0.6) 2px, transparent 2px);
+      background-size: 26px 8px;
+      border: none;
+      &:hover {
+        background-color: transparent;
+        background-image: radial-gradient(circle at center, rgba(0,0,0,0.8) 2px, transparent 2px);
+      }
+      &:focus { box-shadow: none; }
+    }
+  }
+}
+
+.event-actions-list {
+  min-width: 150px;
+  max-width: 300px;
+  .list-group-item {
+    position: relative;
+    cursor: pointer;
+    &:hover {
+      font-weight: bolder;
+    }
+    .action-icon {
+      position: absolute;
+      right: 5px;
+    }
+  }
+  .arrow { left: 10px; }
 }

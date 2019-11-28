@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren, ViewEncapsulation} from '@angular/core';
 import { Event } from '../../models/event';
 import { EventsService } from '../../services/events.service';
 import {trigger, keyframes, animate, transition, style, state} from '@angular/animations';
@@ -7,6 +7,7 @@ import {trigger, keyframes, animate, transition, style, state} from '@angular/an
   selector: 'app-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('eventAnimator', [
       state('slideOutLeft', style({ display: 'none', opacity: 0 })),
@@ -19,25 +20,23 @@ import {trigger, keyframes, animate, transition, style, state} from '@angular/an
     ])
   ]
 })
-export class EventComponent implements OnInit, AfterViewInit {
+export class EventComponent implements AfterViewInit {
 
   @Input() event: Event;
   @ViewChildren('EventRef') EventRef: QueryList<ElementRef>;
+
   animationState: string;
   eventCard: HTMLDListElement;
 
   constructor(private eventService: EventsService) { }
 
-  ngOnInit() {
-  }
-
   ngAfterViewInit() {
     this.eventCard = this.EventRef.first.nativeElement;
   }
 
-  completeEvent(event: Event): void {
-    event.complete = true;
-    this.eventService.updateEvent(event).subscribe();
+  completeEvent(isComplete: boolean = this.event.complete): void {
+    this.event.complete = isComplete;
+    this.eventService.updateEvent(this.event).subscribe();
   }
 
   deleteEvent(event: Event): void {
