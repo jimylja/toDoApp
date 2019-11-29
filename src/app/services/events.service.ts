@@ -32,7 +32,7 @@ export class EventsService {
           if (activeDate in events) {
             return {[activeDate]: events[activeDate]};
           } else {
-            return null;
+            return {};
           }
         })
       ))
@@ -100,12 +100,12 @@ export class EventsService {
    * @params event - object with updated data
    * @return - updated event
    */
-  updateEvent(event: Event): Observable<Event> {
-    return this.http.put('http://localhost:3000/events', event).pipe(
+  updateEvent(event: Event): void {
+    this.http.put('http://localhost:3000/events', event).pipe(
       map((resp: {message: string, event: Event}) => {
         return resp.event;
       })
-    );
+    ).subscribe(updatedEvent => this.updateEventsStorage(updatedEvent));
   }
 
   /**

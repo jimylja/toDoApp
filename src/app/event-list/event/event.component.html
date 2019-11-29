@@ -26,7 +26,13 @@
 <ng-template #popContent>
   <ul class="list-group">
     <li class="list-group-item border-0" (click)="completeEvent(!event.complete)">Complete <span class="action-icon">🗹</span></li>
-    <li class="list-group-item border-0" >Edit <span class="action-icon">🖉</span></li>
+    <li class="list-group-item border-0" (click)="popupConfig.isOpen=true">Edit <span class="action-icon">🖉</span></li>
     <li class="list-group-item border-0" (click)="deleteEvent(event)">Delete <span class="action-icon">ⓧ</span></li>
   </ul>
 </ng-template>
+
+<ng-container *ngIf="popupConfig.isOpen">
+  <app-popup [popupConfig]="popupConfig">
+    <app-add-event [event]="popupConfig.event"></app-add-event>
+  </app-popup>
+</ng-container>

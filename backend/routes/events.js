@@ -89,11 +89,13 @@ router.delete("/", (req, res) => {
 router.put("/", (req, res) => {
   Event.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, newEvent) => {
     if (err) return res.status(500).send(err);
-    return res.json({
-      message: "Event was updated successfully!",
-      event: newEvent
-    })
-  } )
+    Event.populate(newEvent, {path: "category"}, (err, event) => {
+      return res.json({
+        message: "Event was updated successfully!",
+        event: event
+      })
+    });
+  })
 });
 
 /**
@@ -112,16 +114,8 @@ router.put("/", (req, res) => {
  *     responses: '201':
  *       description: Event Created
  */
- router.post("/", (req, res) => {
-  const startDate = new Date(...Object.values(req.body.startDate));
-  const endDate = new Date(...Object.values(req.body.endDate));
-  const newEvent = new Event({
-    title: req.body.title,
-    description: req.body.description,
-    category: req.body.category,
-    startDate: startDate,
-    endDate: endDate,
-  });
+router.post("/", (req, res) => {
+  const newEvent = new Event(req.body);
   newEvent.save((err, event) => {
     if (err) return res.status(500).send(err);
     Event.populate(event, {path: "category"}, (err, event) => {
@@ -129,8 +123,7 @@ router.put("/", (req, res) => {
         message: "Event was created successfully!",
         event: event
       });
-    } );
-
+    });
   })
 });
 

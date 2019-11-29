@@ -1,6 +1,6 @@
 <form [formGroup]="newEventForm" (ngSubmit)="onSubmit()">
   <div class="form-group text-center">
-    <label for="task-title">Add new task</label>
+    <label for="task-title">{{this.event ? 'Edit event' : 'Add new event'}}</label>
     <input type="text" formControlName="title" class="form-control" id="task-title" placeholder="Title of event">
     <div *ngIf="newEventForm.controls.title.errors?.required && newEventForm.controls.title.touched" class="error">*Required</div>
   </div>
@@ -29,14 +29,18 @@
 
   <div class="form-group">
     <p class="m-0">Choose date</p>
-    <input type="checkbox" (change)="true" id="datePicker" #displayPickers  class="invisible" name="scales">
-    <label for="datePicker" class="font-weight-bolder">Scales
+    <input type="checkbox" (change)="true" id="datePicker" #displayPickers  class="d-none" name="scales">
+    <label for="datePicker">
+      <small class="font-weight-bolder">
+        {{eventStart | date : 'dd.MM(EE) hh:mm'}} -->
+        {{eventEnd | date : 'dd.MM(EE) hh:mm'}}
+      </small>
       <div class="arrow" [ngClass]="!displayPickers.checked ? 'down' : 'up'"></div>
     </label>
     <div class="range-picker container" [ngClass]="!displayPickers.checked ? 'closed':''">
       <div class="row mx-auto p-0 p-sm-1">
-        <label class="col-2 col-sm-2 my-auto" for="eventStart">Start:</label>
-        <div class="col-8 col-sm-6 input-group p-1 my-auto">
+        <label class="col-3 col-sm-2 my-auto" for="eventStart">Start:</label>
+        <div class="col-9 col-sm-6 input-group p-1 my-auto">
           <input class="form-control" formControlName="startDate" placeholder="yyyy-mm-dd" id="eventStart" name="event-start" ngbDatepicker #start="ngbDatepicker">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary calendar" (click)="start.toggle()" type="button"></button>
@@ -45,8 +49,8 @@
         <ngb-timepicker formControlName="startTime" class="col-6 col-sm-4 p-1 mx-auto"></ngb-timepicker>
       </div>
       <div class="row mx-auto p-0 p-sm-1">
-        <label class="col-2 col-sm-2 my-auto" for="eventEnd">End:</label>
-        <div class="col-8 col-sm-6 input-group p-1 my-auto">
+        <label class="col-3 col-sm-2 my-auto" for="eventEnd">End:</label>
+        <div class="col-9 col-sm-6 input-group p-1 my-auto">
           <input class="form-control" formControlName="endDate" placeholder="yyyy-mm-dd" id="eventEnd" name="event-start" ngbDatepicker #end="ngbDatepicker">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary calendar" (click)="end.toggle()" type="button"></button>
@@ -61,7 +65,7 @@
     <button type="submit"
             [disabled]="!newEventForm.valid"
             [ngClass]="!newEventForm.valid ? 'btn-secondary' : 'btn-primary'"
-            class="btn mb-2">Add task
+            class="btn mb-2">{{this.event ? 'Edit event' : 'Add event'}}
     </button>
   </div>
 </form>

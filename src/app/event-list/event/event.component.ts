@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren, ViewEncapsulation} from '@angular/core';
 import { Event } from '../../models/event';
+import { PopupConfig } from '../../models/popup';
 import { EventsService } from '../../services/events.service';
 import {trigger, keyframes, animate, transition, style, state} from '@angular/animations';
 
@@ -27,20 +28,22 @@ export class EventComponent implements AfterViewInit {
 
   animationState: string;
   eventCard: HTMLDListElement;
+  popupConfig: PopupConfig = {isOpen: false};
 
   constructor(private eventService: EventsService) { }
 
   ngAfterViewInit() {
     this.eventCard = this.EventRef.first.nativeElement;
+    this.popupConfig.event = this.event;
   }
 
   completeEvent(isComplete: boolean = this.event.complete): void {
     this.event.complete = isComplete;
-    this.eventService.updateEvent(this.event).subscribe();
+    this.eventService.updateEvent(this.event);
   }
 
   deleteEvent(event: Event): void {
-    this.eventService.deleteEvent(event).subscribe();
+    this.eventService.deleteEvent(event);
   }
 
   moveLeft(moveEvent: any): void {
