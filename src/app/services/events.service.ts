@@ -43,7 +43,7 @@ export class EventsService {
    * updates active month and year
    * @param direction number - next month: 1; previous month: -1
    */
-  changeMonth(direction: 1|-1): void {
+  changeMonth(direction: number): void {
     const nextMonth = this.activeMonth$.value + direction;
     const curYear = this.activeYear$.value;
 

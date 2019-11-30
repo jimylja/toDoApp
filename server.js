@@ -1,8 +1,6 @@
-const http = require('http');
 const app = require('./backend/app');
 
-const port = process.env.PORT || 3000;
-app.set('port', port);
-const server = http.createServer(app);
-
-server.listen(port);
+const server = app.listen(process.env.PORT || 3000, function () {
+  const port = server.address().port;
+  console.log("App now running on port", port);
+});

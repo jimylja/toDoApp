@@ -59,7 +59,7 @@ export class CalendarComponent implements OnInit {
    * changes the active month
    * @param direction number - next month: 1; previous month: -1
    */
-  changeMonth(direction: 1 | -1): void {
+  changeMonth(direction: number): void {
     this.eventService.changeMonth(direction);
   }
 
