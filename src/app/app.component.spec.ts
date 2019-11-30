@@ -10,7 +10,7 @@ import { FooterComponent } from './footer/footer.component';
 import { EventComponent } from './event-list/event/event.component';
 import { PopupComponent } from './popup/popup.component';
 import { AddEventComponent } from './add-event/add-event.component';
-import { NgbDatepickerModule, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbTimepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -20,7 +20,7 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent, CalendarComponent, EventListComponent, FooterComponent,
-        EventComponent, PopupComponent, AddEventComponent, NgbTimepicker
+        EventComponent, PopupComponent, AddEventComponent, NgbTimepicker, NgbPopover
       ],
       providers: []
     }).compileComponents();

@@ -33,7 +33,9 @@ export class EventComponent implements AfterViewInit {
   constructor(private eventService: EventsService) { }
 
   ngAfterViewInit() {
-    this.eventCard = this.EventRef.first.nativeElement;
+    if (this.EventRef.first) {
+      this.eventCard = this.EventRef.first.nativeElement;
+    }
     this.popupConfig.event = this.event;
   }
 

@@ -1,17 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventComponent } from './event.component';
+import { PopupComponent } from '../../popup/popup.component';
+import { AddEventComponent } from '../../add-event/add-event.component';
+import { NgbTimepicker, NgbDatepickerModule, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
-fdescribe('EventComponent', () => {
+describe('EventComponent', () => {
   let component: EventComponent;
   let fixture: ComponentFixture<EventComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, BrowserAnimationsModule],
-      declarations: [ EventComponent ]
+      imports: [HttpClientTestingModule, BrowserAnimationsModule, FormsModule, ReactiveFormsModule, NgbDatepickerModule],
+      declarations: [ EventComponent, NgbPopover, PopupComponent, AddEventComponent, NgbTimepicker ]
     })
     .compileComponents();
   }));
