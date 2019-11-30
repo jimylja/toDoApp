@@ -14,7 +14,6 @@ export interface EventDate {
   hour?: number;
   minute?: number;
   second?: number;
-  dateStr: string;
 }
 
 @Component({
@@ -44,18 +43,18 @@ export class AddEventComponent implements OnInit {
       title: [this.event ? this.event.title : '', Validators.required],
       description: [this.event ? this.event.description : '', Validators.required],
       startDate: [this.event ? this.getDateObj(moment(this.event.startDate)) : this.getDateObj(this.eventStart), Validators.required],
-      endDate: [this.event ? this.getDateObj(moment(this.event.startDate)) : this.getDateObj(this.eventEnd), Validators.required],
+      endDate: [this.event ? this.getDateObj(moment(this.event.endDate)) : this.getDateObj(this.eventEnd), Validators.required],
       startTime: [this.event ? this.getDateObj(moment(this.event.startDate)) : this.getDateObj(this.eventStart)],
-      endTime: [this.event ? this.getDateObj(moment(this.event.startDate)) : this.getDateObj(this.eventEnd)],
-      category: [this.event ? this.event.category._id : ''],
+      endTime: [this.event ? this.getDateObj(moment(this.event.endDate)) : this.getDateObj(this.eventEnd)],
+      category: [this.event ? this.event.category._id : '', Validators.required],
     });
     this.categories$ = this.categoriesService.getCategories();
   }
 
   onSubmit() {
     const newEvent = this.newEventForm.value;
-    newEvent.startDate = newEvent.startDate.dateStr;
-    newEvent.endDate = newEvent.endDate.dateStr;
+    newEvent.startDate = this.startEventStr;
+    newEvent.endDate = this.endEventStr;
     newEvent.complete = this.event ? this.event.complete : false;
     if (this.event) {
       newEvent._id = this.event._id;
@@ -68,12 +67,25 @@ export class AddEventComponent implements OnInit {
   getDateObj(date: moment.Moment): EventDate {
     return {
       year: date.get('year'),
-      month: date.get('month'),
+      month: date.get('month') + 1,
       day: date.get('date'),
       hour: date.get('hour'),
       minute: date.get('minute'),
       second: date.get('second'),
-      dateStr: date.format('YYYY-MM-DD HH:mm:ss')
     };
+  }
+
+  get startEventStr(): string {
+    const {year, month, day} = this.newEventForm.controls.startDate.value;
+    const {hour, minute, second} = this.newEventForm.controls.startTime.value;
+    const dateObj = moment().set({year, month: month - 1, date: day, hour, minute, second});
+    return dateObj.format('YYYY-MM-DD HH:mm:ss');
+  }
+
+  get endEventStr(): string {
+    const {year, month, day} = this.newEventForm.controls.endDate.value;
+    const {hour, minute, second} = this.newEventForm.controls.endTime.value;
+    const dateObj = moment().set({year, month: month - 1, date: day, hour, minute, second});
+    return dateObj.format('YYYY-MM-DD HH:mm:ss');
   }
 }

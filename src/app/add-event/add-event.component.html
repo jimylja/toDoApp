@@ -32,8 +32,8 @@
     <input type="checkbox" (change)="true" id="datePicker" #displayPickers  class="d-none" name="scales">
     <label for="datePicker">
       <small class="font-weight-bolder">
-        {{eventStart | date : 'dd.MM(EE) hh:mm'}} -->
-        {{eventEnd | date : 'dd.MM(EE) hh:mm'}}
+        {{startEventStr | date : 'dd.MM(EE) hh:mm'}} -->
+        {{endEventStr | date : 'dd.MM(EE) hh:mm'}}
       </small>
       <div class="arrow" [ngClass]="!displayPickers.checked ? 'down' : 'up'"></div>
     </label>
