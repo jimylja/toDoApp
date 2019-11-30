@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { openCloseAnimation, openCloseShadeAnimation } from './animation';
+import { PopupConfig } from '../models/popup';
 
 @Component({
   selector: 'app-popup',
@@ -11,13 +12,10 @@ import { openCloseAnimation, openCloseShadeAnimation } from './animation';
     openCloseShadeAnimation,
   ]
 })
-export class PopupComponent implements OnInit {
+export class PopupComponent {
 
   constructor() { }
-  @Input() popupConfig: {isOpen: boolean};
-
-  ngOnInit() {
-  }
+  @Input() popupConfig: PopupConfig;
 
   closePopup() {
     this.popupConfig.isOpen = false;

@@ -3,7 +3,9 @@
     <ul *ngIf="(events | json) != '{}'; else noEvents" class="offset-md-2 col-md-8 p-3" #dates>
       <ng-container *ngFor="let day of events | keyvalue">
         <time class="sticky-date" *ngIf="monthlyView" [attr.datetime]="day.key">{{day.key}}</time>
-        <app-event *ngFor="let event of day.value.events | keyvalue" [event]="event.value"></app-event>
+        <ng-container>
+          <app-event *ngFor="let event of day.value.events" [event]="event"></app-event>
+        </ng-container>
       </ng-container>
     </ul>
   </section>
@@ -16,7 +18,5 @@
 </ng-template>
 
 <ng-template #Loading>
-  <main class="offset-md-2 col-md-8 p-3 text-center">
-    Waiting for data...
-  </main>
+  <main class="offset-md-2 col-md-8 p-3 text-center waiting"></main>
 </ng-template>
