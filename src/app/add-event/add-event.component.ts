@@ -48,7 +48,6 @@ export class AddEventComponent implements OnInit {
       startTime: [this.event ? this.getDateObj(moment(this.event.startDate)) : this.getDateObj(this.eventStart)],
       endTime: [this.event ? this.getDateObj(moment(this.event.startDate)) : this.getDateObj(this.eventEnd)],
       category: [this.event ? this.event.category._id : ''],
-      _id: [this.event ? this.event._id : '']
     });
     this.categories$ = this.categoriesService.getCategories();
   }
@@ -59,6 +58,7 @@ export class AddEventComponent implements OnInit {
     newEvent.endDate = newEvent.endDate.dateStr;
     newEvent.complete = this.event ? this.event.complete : false;
     if (this.event) {
+      newEvent._id = this.event._id;
       this.eventService.updateEvent(newEvent);
     } else {
       this.eventService.addEvent(newEvent);

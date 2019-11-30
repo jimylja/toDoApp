@@ -112,10 +112,10 @@ export class EventsService {
    * delete event on server
    * @params event - object with updated data
    */
-  deleteEvent(event: Event): Observable<any> {
+  deleteEvent(event: Event): void {
     this.updateEventsStorage(event, true);
     const id = event._id;
-    return this.http.delete(`http://localhost:3000/events`, {params: {id}});
+    this.http.delete(`http://localhost:3000/events`, {params: {id}}).subscribe();
   }
 
   /**
