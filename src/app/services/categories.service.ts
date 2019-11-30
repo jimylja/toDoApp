@@ -12,7 +12,7 @@ export class CategoriesService {
   constructor(private http: HttpClient) { }
 
   getCategories(): Observable<Category[]> {
-    return this.http.get('http://localhost:3000/category').pipe(
+    return this.http.get('/category').pipe(
       map( (resp: {message: string, data: Category[]}) => resp.data)
     );
   }
