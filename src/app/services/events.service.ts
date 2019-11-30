@@ -80,7 +80,7 @@ export class EventsService {
    * @returns GroupedEvents - object were events are grouped by date
    */
   private getEvents(): Observable<GroupedEvents> {
-    return this.http.get('http://localhost:3000/events', {
+    return this.http.get('/events', {
       params: {
         month: String(this.activeMonth$.value),
         year: String(this.activeYear$.value)
@@ -101,7 +101,7 @@ export class EventsService {
    * @return - updated event
    */
   updateEvent(event: Event): void {
-    this.http.put('http://localhost:3000/events', event).pipe(
+    this.http.put('/events', event).pipe(
       map((resp: {message: string, event: Event}) => {
         return resp.event;
       })
@@ -115,7 +115,7 @@ export class EventsService {
   deleteEvent(event: Event): void {
     this.updateEventsStorage(event, true);
     const id = event._id;
-    this.http.delete(`http://localhost:3000/events`, {params: {id}}).subscribe();
+    this.http.delete(`/events`, {params: {id}}).subscribe();
   }
 
   /**
@@ -123,7 +123,7 @@ export class EventsService {
    * @params eventData - object with data for new event
    */
   addEvent(eventData): void {
-    this.http.post(`http://localhost:3000/events`, eventData).pipe(
+    this.http.post(`/events`, eventData).pipe(
       map((resp: {message: string, event: Event}) => resp.event)
     ).subscribe( event => this.updateEventsStorage(event) );
   }
