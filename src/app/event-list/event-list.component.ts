@@ -30,6 +30,13 @@ export class EventListComponent implements OnInit, OnChanges {
     this.events$ = this.eventService.eventsForDisplay$;
   }
 
+  eventClick(activeDay): void {
+    const eventDate = moment(activeDay);
+    if (!this.eventService.activeDate$.value.isSame(eventDate, 'date')) {
+      this.eventService.activeDate$.next(eventDate.clone());
+    }
+  }
+
   private scrollViewToDate(activeDate: moment.Moment): void {
     const date = activeDate.format('YYYY-MM-DD');
     const curDateElem = this.dates.nativeElement.querySelector(`[datetime="${date}"]`);
