@@ -12,13 +12,18 @@ export enum StoreActions {
   updateMonth
 }
 
+export interface EventStorage {
+  [year: number]: GroupedEvents[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
 
 export class EventsService {
   private today = moment();
-  private eventsStorage$ = new BehaviorSubject<GroupedEvents[]|null>([].fill(null, 0, 11));
+  // private eventsStorage$ = new BehaviorSubject<GroupedEvents[]|null>([].fill(null, 0, 11));
+  private eventsStorage$ = new BehaviorSubject<EventStorage|null>( { [this.today.year()]: [].fill(null, 0, 11)});
   monthlyMode$ = new BehaviorSubject<boolean>(true);
   activeMonthEvents$ = new BehaviorSubject<GroupedEvents|null>(null);
 
@@ -76,7 +81,7 @@ export class EventsService {
   getEventsForMonth(): any {
     const eventsForMonth = this.eventsStorage$.value[this.activeMonth$.value];
     if (eventsForMonth !== undefined) {
-      this.activeMonthEvents$.next(eventsForMonth);
+      this.activeMonthEvents$.next(eventsForMonth[this.activeYear$.value]);
     } else {
       this.getEvents().subscribe();
     }
@@ -155,70 +160,80 @@ export class EventsService {
     );
   }
 
+  /**
+   * updates local cash of events
+   * @params events - array of grouped by date events or single event object
+   * @params action - type of action
+   */
   private updateEventsStorage(events: GroupedEvents|Event, action: StoreActions): void {
     const storageData = this.eventsStorage$.value;
+    const curYear = this.activeYear$.value;
+    storageData[curYear] = storageData[curYear] ? Object.assign(storageData[curYear]) : [].fill(null, 0, 11);
+    const curYearData = storageData[curYear];
 
     if (action === StoreActions.updateMonth) {
-      storageData[this.activeMonth$.value] = events as GroupedEvents;
+      curYearData[this.activeMonth$.value] = events as GroupedEvents;
     } else {
       const event = events as Event;
       const eventMonth = moment(event.startDate).get('month');
       const eventDate = moment(event.startDate).format('YYYY-MM-DD');
-      const curMonthEvents = storageData[eventMonth] ? Object.assign(storageData[eventMonth]) : {};
+      const curMonthEvents = curYearData[eventMonth] ? Object.assign(curYearData[eventMonth]) : {};
 
       switch (action) {
         case StoreActions.updateEvent:
           const oldDate = this.activeDate$.value.format('YYYY-MM-DD');
-          const oldMonthEvents = Object.assign(storageData[this.activeMonth$.value]);
+          const oldMonthEvents = Object.assign(curYearData[this.activeMonth$.value]);
           const oldEvent = oldMonthEvents[oldDate].events.find( item => event._id === item._id);
           const isEventForOtherDate = !this.activeDate$.value.isSame(moment(event.startDate), 'date');
           if (isEventForOtherDate) {
-            this.deleteEventFromMonth(oldEvent);
-            this.addEventIntoMonth(event);
+            this.updateMonthInStorage(oldEvent, true);
+            this.updateMonthInStorage(event);
           } else {
             const currentEventPos = curMonthEvents[eventDate].events.findIndex( item => event._id === item._id);
             curMonthEvents[eventDate].events[currentEventPos] = event;
           }
           break;
         case StoreActions.addEvent:
-          this.addEventIntoMonth(event);
+          this.updateMonthInStorage(event);
           break;
         case StoreActions.deleteEvent:
-          this.deleteEventFromMonth(event);
+          this.updateMonthInStorage(event, true);
           break;
-        default:
-        storageData[eventMonth] = curMonthEvents;
-        this.eventsStorage$.next(storageData);
+      }
+      curYearData[eventMonth] = curMonthEvents;
+      storageData[this.activeYear$.value] = curYearData;
+      this.eventsStorage$.next(storageData);
+    }
+  }
+
+  private updateMonthInStorage(event: Event, isDeleteAction?: boolean) {
+    const storageData = this.eventsStorage$.value;
+    const date = moment(event.startDate);
+    const eventDate = date.format('YYYY-MM-DD');
+    storageData[date.year()] = storageData[date.year()] ? Object.assign(storageData[date.year()]) : [].fill(null, 0, 11);
+    const curYearData = storageData[date.year()];
+    const curMonthEvents = curYearData[date.month()] ? Object.assign(curYearData[date.month()]) : {};
+
+    if (isDeleteAction) {
+      const currentEventPos = curMonthEvents[eventDate].events.findIndex( item => event._id === item._id);
+      curMonthEvents[eventDate].events.splice(currentEventPos, 1);
+      if (curMonthEvents[eventDate].events.length === 0 ) {
+        delete curMonthEvents[eventDate];
+        if (Object.entries(curMonthEvents).length === 0) {
+          curYearData.splice(this.activeMonth$.value, 1);
+          if (curYearData.length === 0) {
+            delete this.eventsStorage$.value[date.year()];
+          }
+        }
+      }
+    } else {
+      const isDateWithoutEvents = !curMonthEvents.hasOwnProperty(eventDate);
+      if (isDateWithoutEvents) {
+        curMonthEvents[eventDate] = {events: [event], categories: new Set([event.category.color])};
+      } else {
+        curMonthEvents[eventDate].events.push(event);
+        curMonthEvents[eventDate].categories.add(event.category.color);
       }
     }
- }
-
- private addEventIntoMonth(event: Event): void {
-   const storageData = this.eventsStorage$.value;
-   const month = moment(event.startDate).get('month');
-   const eventDate = moment(event.startDate).format('YYYY-MM-DD');
-   const curMonthEvents = storageData[month] ? Object.assign(storageData[month]) : {};
-   const isDateWithoutEvents = !curMonthEvents.hasOwnProperty(eventDate);
-   if (isDateWithoutEvents) {
-     curMonthEvents[eventDate] = {events: [event], categories: new Set([event.category.color])};
-   } else {
-     curMonthEvents[eventDate].events.push(event);
-     curMonthEvents[eventDate].categories.add(event.category.color);
-   }
- }
-
- private deleteEventFromMonth(event: Event): void {
-   const storageData = this.eventsStorage$.value;
-   const month = moment(event.startDate).get('month');
-   const eventDate = moment(event.startDate).format('YYYY-MM-DD');
-   const curMonthEvents = storageData[month] ? Object.assign(storageData[month]) : {};
-   const currentEventPos = curMonthEvents[eventDate].events.findIndex( item => event._id === item._id);
-   curMonthEvents[eventDate].events.splice(currentEventPos, 1);
-   if (curMonthEvents[eventDate].events.length === 0 ) {
-     delete curMonthEvents[eventDate];
-     if (Object.entries(curMonthEvents).length === 0) {
-       storageData.splice(this.activeMonth$.value, 1);
-     }
-   }
- }
+  }
 }
