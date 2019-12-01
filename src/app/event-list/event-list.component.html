@@ -4,7 +4,7 @@
       <ng-container *ngFor="let day of events | keyvalue">
         <time class="sticky-date" *ngIf="monthlyView" [attr.datetime]="day.key">{{day.key}}</time>
         <ng-container>
-          <app-event *ngFor="let event of day.value.events" [event]="event"></app-event>
+          <app-event (click)="eventClick(event.startDate)" *ngFor="let event of day.value.events" [event]="event"></app-event>
         </ng-container>
       </ng-container>
     </ul>

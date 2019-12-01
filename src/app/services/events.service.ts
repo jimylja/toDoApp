@@ -5,6 +5,13 @@ import {map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
 import * as moment from 'moment';
 
+export enum StoreActions {
+  addEvent,
+  updateEvent,
+  deleteEvent,
+  updateMonth
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -88,7 +95,7 @@ export class EventsService {
     }).pipe(
       map( (resp: {message: string, events: Event[]}) => {
         const eventsForMonth = this.groupEventsByDay(resp.events);
-        this.updateEventsStorage(eventsForMonth);
+        this.updateEventsStorage(eventsForMonth, StoreActions.updateMonth);
         this.activeMonthEvents$.next(eventsForMonth);
         return eventsForMonth;
       })
@@ -105,7 +112,7 @@ export class EventsService {
       map((resp: {message: string, event: Event}) => {
         return resp.event;
       })
-    ).subscribe(updatedEvent => this.updateEventsStorage(updatedEvent));
+    ).subscribe(updatedEvent => this.updateEventsStorage(updatedEvent, StoreActions.updateEvent));
   }
 
   /**
@@ -113,7 +120,7 @@ export class EventsService {
    * @params event - object with updated data
    */
   deleteEvent(event: Event): void {
-    this.updateEventsStorage(event, true);
+    this.updateEventsStorage(event, StoreActions.deleteEvent);
     const id = event._id;
     this.http.delete(`/events`, {params: {id}}).subscribe();
   }
@@ -125,7 +132,7 @@ export class EventsService {
   addEvent(eventData): void {
     this.http.post(`/events`, eventData).pipe(
       map((resp: {message: string, event: Event}) => resp.event)
-    ).subscribe( event => this.updateEventsStorage(event) );
+    ).subscribe( event => this.updateEventsStorage(event, StoreActions.addEvent) );
   }
 
   /**
@@ -148,43 +155,70 @@ export class EventsService {
     );
   }
 
-  /**
-   * updates local cash of events
-   * @params events - array of grouped by date events or single event object
-   * @params isDeleteAction - array of grouped by date events or single event object
-   */
-  private updateEventsStorage(events: GroupedEvents|Event, isDeleteAction?: boolean): void {
+  private updateEventsStorage(events: GroupedEvents|Event, action: StoreActions): void {
     const storageData = this.eventsStorage$.value;
-    if (events.hasOwnProperty('_id')) {
+
+    if (action === StoreActions.updateMonth) {
+      storageData[this.activeMonth$.value] = events as GroupedEvents;
+    } else {
       const event = events as Event;
+      const eventMonth = moment(event.startDate).get('month');
       const eventDate = moment(event.startDate).format('YYYY-MM-DD');
-      const monthlyEvents = Object.assign(storageData[this.activeMonth$.value]);
-      const isDateWithoutEvents = !monthlyEvents.hasOwnProperty(eventDate);
-      if (isDateWithoutEvents) {
-        monthlyEvents[eventDate] = {events: [event], categories: new Set([event.category.color])};
-      } else {
-        const currentEventPos = monthlyEvents[eventDate].events.findIndex( item => event._id === item._id);
-        const isUpdateAction = currentEventPos !== -1;
-        if (isDeleteAction) {
-          monthlyEvents[eventDate].events.splice(currentEventPos, 1);
-          if (monthlyEvents[eventDate].events.length === 0 ) {
-            delete monthlyEvents[eventDate];
-            if (Object.entries(monthlyEvents).length === 0) {
-              storageData.splice(this.activeMonth$.value, 1);
-            }
-          }
-        } else {
-          if (isUpdateAction) {
-            monthlyEvents[eventDate].events[currentEventPos] = event;
+      const curMonthEvents = storageData[eventMonth] ? Object.assign(storageData[eventMonth]) : {};
+
+      switch (action) {
+        case StoreActions.updateEvent:
+          const oldDate = this.activeDate$.value.format('YYYY-MM-DD');
+          const oldMonthEvents = Object.assign(storageData[this.activeMonth$.value]);
+          const oldEvent = oldMonthEvents[oldDate].events.find( item => event._id === item._id);
+          const isEventForOtherDate = !this.activeDate$.value.isSame(moment(event.startDate), 'date');
+          if (isEventForOtherDate) {
+            this.deleteEventFromMonth(oldEvent);
+            this.addEventIntoMonth(event);
           } else {
-            monthlyEvents[eventDate].events.push(event);
-            monthlyEvents[eventDate].categories.add(event.category.color);
+            const currentEventPos = curMonthEvents[eventDate].events.findIndex( item => event._id === item._id);
+            curMonthEvents[eventDate].events[currentEventPos] = event;
           }
-        }
+          break;
+        case StoreActions.addEvent:
+          this.addEventIntoMonth(event);
+          break;
+        case StoreActions.deleteEvent:
+          this.deleteEventFromMonth(event);
+          break;
+        default:
+        storageData[eventMonth] = curMonthEvents;
+        this.eventsStorage$.next(storageData);
       }
-      events = monthlyEvents;
     }
-    storageData[this.activeMonth$.value] = events as GroupedEvents;
-    this.eventsStorage$.next(storageData);
-  }
+ }
+
+ private addEventIntoMonth(event: Event): void {
+   const storageData = this.eventsStorage$.value;
+   const month = moment(event.startDate).get('month');
+   const eventDate = moment(event.startDate).format('YYYY-MM-DD');
+   const curMonthEvents = storageData[month] ? Object.assign(storageData[month]) : {};
+   const isDateWithoutEvents = !curMonthEvents.hasOwnProperty(eventDate);
+   if (isDateWithoutEvents) {
+     curMonthEvents[eventDate] = {events: [event], categories: new Set([event.category.color])};
+   } else {
+     curMonthEvents[eventDate].events.push(event);
+     curMonthEvents[eventDate].categories.add(event.category.color);
+   }
+ }
+
+ private deleteEventFromMonth(event: Event): void {
+   const storageData = this.eventsStorage$.value;
+   const month = moment(event.startDate).get('month');
+   const eventDate = moment(event.startDate).format('YYYY-MM-DD');
+   const curMonthEvents = storageData[month] ? Object.assign(storageData[month]) : {};
+   const currentEventPos = curMonthEvents[eventDate].events.findIndex( item => event._id === item._id);
+   curMonthEvents[eventDate].events.splice(currentEventPos, 1);
+   if (curMonthEvents[eventDate].events.length === 0 ) {
+     delete curMonthEvents[eventDate];
+     if (Object.entries(curMonthEvents).length === 0) {
+       storageData.splice(this.activeMonth$.value, 1);
+     }
+   }
+ }
 }
