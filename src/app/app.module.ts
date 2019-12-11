@@ -17,9 +17,11 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
 
 import * as Hammer from 'hammerjs';
 import { AddEventComponent } from './add-event/add-event.component';
+import { AddCategoryComponent } from './add-category/add-category.component';
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = {
-    swipe: { direction: Hammer.DIRECTION_ALL }
+    swipe: { direction: Hammer.DIRECTION_ALL },
+    press: { time: 1000 }
   } as any;
 }
 
@@ -30,7 +32,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     EventListComponent,
     EventComponent,
     FooterComponent,
-    AddEventComponent
+    AddEventComponent,
+    AddCategoryComponent
   ],
   imports: [
     BrowserModule,

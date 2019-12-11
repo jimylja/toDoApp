@@ -7,7 +7,9 @@
 
   <div class="form-group d-flex flex-row flex-nowrap justify-content-center categories">
     <ng-container *ngIf="categories$ | async as categories">
-      <div *ngFor="let category of categories" class="custom-control custom-control-inline px-0 mx-0">
+      <div *ngFor="let category of categories"
+           (press)="showCategoryPopup(category)"
+           class="custom-control custom-control-inline px-0 mx-0">
         <input type="radio" formControlName="category" name="category" (change)="true" #radioRef id="{{category.name}}" [value]="category._id">
         <label for="{{category.name}}"
                [ngStyle]="{'background-color': radioRef.checked ? category.color : '' }"
@@ -20,6 +22,7 @@
         </label>
       </div>
     </ng-container>
+    <div (click)="showCategoryPopup()" class="add-category-btn position-absolute"><span>+</span></div>
   </div>
 
   <div class="form-group">
@@ -60,7 +63,6 @@
       </div>
     </div>
   </div>
-
   <div class="form-group text-center">
     <button type="submit"
             [disabled]="!newEventForm.valid"
@@ -69,3 +71,9 @@
     </button>
   </div>
 </form>
+
+<ng-container *ngIf="popupConfig.isOpen">
+  <app-popup [popupConfig]="popupConfig">
+    <app-add-category [category]="popupConfig.category"></app-add-category>
+  </app-popup>
+</ng-container>

@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventComponent } from './event.component';
 import { PopupComponent } from '../../popup/popup.component';
 import { AddEventComponent } from '../../add-event/add-event.component';
+import { AddCategoryComponent } from '../../add-category/add-category.component';
 import { NgbTimepicker, NgbDatepickerModule, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 describe('EventComponent', () => {
@@ -14,7 +15,7 @@ describe('EventComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, BrowserAnimationsModule, FormsModule, ReactiveFormsModule, NgbDatepickerModule],
-      declarations: [ EventComponent, NgbPopover, PopupComponent, AddEventComponent, NgbTimepicker ]
+      declarations: [ EventComponent, NgbPopover, PopupComponent, AddEventComponent, NgbTimepicker, AddCategoryComponent ]
     })
     .compileComponents();
   }));

@@ -6,6 +6,7 @@ import {Event} from '../models/event';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import * as moment from 'moment';
+import {PopupConfig} from '../models/popup';
 
 export interface EventDate {
   year: number;
@@ -29,6 +30,7 @@ export class AddEventComponent implements OnInit {
   categories$: Observable<Category[]>;
   activeDate = this.eventService.activeDate$.value;
   newEventForm: FormGroup;
+  popupConfig: PopupConfig = {isOpen: false};
 
   get eventStart(): moment.Moment {
     return this.activeDate.clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
@@ -87,5 +89,14 @@ export class AddEventComponent implements OnInit {
     const {hour, minute, second} = this.newEventForm.controls.endTime.value;
     const dateObj = moment().set({year, month: month - 1, date: day, hour, minute, second});
     return dateObj.format('YYYY-MM-DD HH:mm:ss');
+  }
+
+   showCategoryPopup(category?: Category) {
+    if (category) {
+      this.popupConfig.category = category;
+    } else {
+      this.popupConfig.category = null;
+    }
+    this.popupConfig.isOpen = true;
   }
 }
