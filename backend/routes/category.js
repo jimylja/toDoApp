@@ -64,7 +64,7 @@ router.post("/", (req, res) => {
  */
 
 router.delete("/", (req, res) => {
-  Event.findByIdAndRemove(req.query.id, (err, category) => {
+  Category.findByIdAndRemove(req.query.id, (err, category) => {
     if (err) return res.status(500).send(err);
     return res.status(200).json({
       message: "Category successfully deleted!",

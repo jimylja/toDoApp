@@ -74,6 +74,6 @@
 
 <ng-container *ngIf="popupConfig.isOpen">
   <app-popup [popupConfig]="popupConfig">
-    <app-add-category [category]="popupConfig.category"></app-add-category>
+    <app-add-category [popupConfig]="popupConfig"></app-add-category>
   </app-popup>
 </ng-container>

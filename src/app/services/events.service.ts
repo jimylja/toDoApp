@@ -22,7 +22,6 @@ export interface EventStorage {
 
 export class EventsService {
   private today = moment();
-  // private eventsStorage$ = new BehaviorSubject<GroupedEvents[]|null>([].fill(null, 0, 11));
   private eventsStorage$ = new BehaviorSubject<EventStorage|null>( { [this.today.year()]: [].fill(null, 0, 11)});
   monthlyMode$ = new BehaviorSubject<boolean>(true);
   activeMonthEvents$ = new BehaviorSubject<GroupedEvents|null>(null);

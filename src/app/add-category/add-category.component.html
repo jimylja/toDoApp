@@ -21,5 +21,7 @@
             [ngClass]="!newCategoryForm.valid ? 'btn-secondary' : 'btn-primary'"
             class="btn mb-2">{{this.category ? 'Edit category' : 'Add category'}}
     </button>
+    <div *ngIf="this.category" (click)="deleteCategory()" class="btn btn-danger mb-2 ml-3 delete-btn"><span>x</span></div>
   </div>
+
 </form>

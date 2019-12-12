@@ -1,21 +1,24 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import { Category } from '../models/category';
 import { CategoriesService } from '../services/categories.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as moment from 'moment';
-import {Event} from '../models/event';
+import {PopupConfig} from '../models/popup';
 
 @Component({
   selector: 'app-add-category',
   templateUrl: './add-category.component.html',
   styleUrls: ['./add-category.component.scss']
 })
-export class AddCategoryComponent implements OnInit {
+export class AddCategoryComponent implements OnInit, OnChanges {
 
   constructor(private categoriesService: CategoriesService, private fb: FormBuilder) { }
   newCategoryForm: FormGroup;
-  @Input() category: Category;
+  category: Category;
+  @Input() popupConfig: PopupConfig;
 
+  ngOnChanges(): void {
+    this.category = this.popupConfig.category;
+  }
 
   ngOnInit() {
     this.newCategoryForm = this.fb.group({
@@ -25,14 +28,20 @@ export class AddCategoryComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     const newCategory = this.newCategoryForm.value;
     if (this.category) {
       newCategory._id = this.category._id;
-      // this.eventService.updateEvent(newCategory);
+      this.categoriesService.updateCategory(newCategory);
     } else {
-      // this.eventService.addEvent(newCategory);
+      this.categoriesService.addCategory(newCategory);
     }
-    console.log(newCategory);
+  }
+
+  deleteCategory(): void {
+    const category = this.newCategoryForm.value;
+    category._id = this.category._id;
+    this.categoriesService.deleteCategory(category);
+    this.popupConfig.isOpen = false;
   }
 }
