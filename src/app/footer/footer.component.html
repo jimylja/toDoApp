@@ -12,6 +12,6 @@
 
 <ng-container *ngIf="popupConfig.isOpen">
   <app-popup [popupConfig]="popupConfig">
-    <app-add-event></app-add-event>
+    <app-add-event [activeDate] = activeDate$|async></app-add-event>
   </app-popup>
 </ng-container>

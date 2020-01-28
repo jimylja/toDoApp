@@ -1,7 +1,10 @@
-import { ElementRef, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { EventsService } from '../services/events.service';
-import { Observable } from 'rxjs';
-import { GroupedEvents } from '../models/event';
+import {Component, Input} from '@angular/core';
+import {Observable} from 'rxjs';
+import {GroupedEvents} from '../models/event';
+import {AppState} from '../state/app.state';
+import { getActiveDateEvents, getActiveMonthEvents } from '../state';
+import {select, Store} from '@ngrx/store';
+import {ChangeActiveDate} from '../state/app.actions';
 import * as moment from 'moment';
 
 @Component({
@@ -9,44 +12,20 @@ import * as moment from 'moment';
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
 })
-export class EventListComponent implements OnInit, OnChanges {
+
+export class EventListComponent {
   @Input() monthlyView: boolean;
-  @ViewChild('dates', {static: false}) dates: ElementRef;
-  events$: Observable<GroupedEvents>;
-  constructor(private eventService: EventsService) { }
-
-  ngOnInit() {
-    this.eventService.getEventsForMonth();
-    this.events$ = this.eventService.eventsForDisplay$;
-    this.eventService.activeDate$.subscribe(
-      activeDate => {
-        if (this.dates && this.monthlyView) { this.scrollViewToDate(activeDate); }
-      }
-    );
-  }
-
-  ngOnChanges() {
-    this.eventService.monthlyMode$.next(this.monthlyView);
-    this.events$ = this.eventService.eventsForDisplay$;
-  }
+  @Input() activeDate: moment.Moment;
+  constructor(private store: Store<AppState>) { }
 
   eventClick(activeDay): void {
     const eventDate = moment(activeDay);
-    if (!this.eventService.activeDate$.value.isSame(eventDate, 'date')) {
-      this.eventService.activeDate$.next(eventDate.clone());
+    if (!this.activeDate.isSame(eventDate, 'date')) {
+      this.store.dispatch(new ChangeActiveDate(eventDate.clone()));
     }
   }
 
-  private scrollViewToDate(activeDate: moment.Moment): void {
-    const date = activeDate.format('YYYY-MM-DD');
-    const curDateElem = this.dates.nativeElement.querySelector(`[datetime="${date}"]`);
-    if (curDateElem) {
-      const toPos = curDateElem.offsetTop - window.pageYOffset;
-      if (toPos < 0) {
-        document.documentElement.scrollTop = toPos;
-      } else {
-        document.documentElement.scrollTop = curDateElem.offsetTop + 34;
-      }
-    }
+  get events$(): Observable<GroupedEvents> {
+    return this.monthlyView ? this.store.pipe(select(getActiveMonthEvents)) : this.store.pipe(select(getActiveDateEvents));
   }
 }

@@ -16,7 +16,7 @@
           <div *ngFor="let day of week" class="d-table-cell"
                [ngClass]="{ 'past-day': !day.isSame(monthFirstDay, 'month'),
                             'current-day': day.isSame(today, 'day'),
-                            'active': day.isSame(activeDate$ | async, 'day')
+                            'active': day.isSame(activeDate, 'day')
                             }"
                (click) = "changeActiveDate(day)">
             <time [attr.datetime]="day.format('YYYY-MM-DD')">{{day.format('DD')}}</time>
