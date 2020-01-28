@@ -1,10 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CategoriesService} from '../services/categories.service';
-import {EventsService} from '../services/events.service';
 import {Category} from '../models/category';
 import {Event} from '../models/event';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {CreateEvent, UpdateEvent} from '../state/app.actions';
+import { AppState } from '../state/app.state';
+
 import * as moment from 'moment';
 
 export interface EventDate {
@@ -23,11 +26,14 @@ export interface EventDate {
 })
 export class AddEventComponent implements OnInit {
 
-  constructor(private categoriesService: CategoriesService, private eventService: EventsService, private fb: FormBuilder) { }
+  constructor(
+    private categoriesService: CategoriesService,
+    private fb: FormBuilder,
+    private store: Store<AppState>) { }
 
+  @Input() activeDate: moment.Moment;
   @Input() event: Event;
   categories$: Observable<Category[]>;
-  activeDate = this.eventService.activeDate$.value;
   newEventForm: FormGroup;
 
   get eventStart(): moment.Moment {
@@ -58,9 +64,9 @@ export class AddEventComponent implements OnInit {
     newEvent.complete = this.event ? this.event.complete : false;
     if (this.event) {
       newEvent._id = this.event._id;
-      this.eventService.updateEvent(newEvent);
+      this.store.dispatch(new UpdateEvent(newEvent));
     } else {
-      this.eventService.addEvent(newEvent);
+      this.store.dispatch(new CreateEvent(newEvent));
     }
   }
 

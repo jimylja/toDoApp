@@ -17,7 +17,9 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 import { reducer } from './state/app.reducer';
+import { AppEffects } from './state/app.effects';
 
 import * as Hammer from 'hammerjs';
 import { AddEventComponent } from './add-event/add-event.component';
@@ -46,6 +48,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     FormsModule, ReactiveFormsModule,
     PopupModule,
     StoreModule.forRoot({app: reducer}),
+    EffectsModule.forRoot([AppEffects]),
     StoreDevtoolsModule.instrument(({
       name: 'TodoApp',
       maxAge: 25,

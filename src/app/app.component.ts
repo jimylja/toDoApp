@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
-import { EventsService } from './services/events.service';
 import { Store, select} from '@ngrx/store';
-import { getMonthlyViewMode } from './state';
+import { getMonthlyViewMode, getActiveDate } from './state';
 import { AppState } from './state/app.state';
-import { ToggleViewMode } from './state/app.actions';
+import { ToggleViewMode, LoadEventsForMonth } from './state/app.actions';
 
 @Component({
   selector: 'app-root',
@@ -14,20 +13,18 @@ import { ToggleViewMode } from './state/app.actions';
 export class AppComponent implements OnInit {
   monthlyView = true;
   monthlyView$ = this.store.pipe(select(getMonthlyViewMode));
+  activeDate$ = this.store.pipe(select(getActiveDate));
 
-  activeDate = this.eventService.activeDate$;
-  constructor(
-    private store: Store<AppState>,
-    private eventService: EventsService) { moment.locale('uk'); }
+  constructor(private store: Store<AppState>) { moment.locale('uk'); }
 
   ngOnInit(): void {
+    this.store.dispatch(new LoadEventsForMonth());
     this.monthlyView$.subscribe(
       view => this.monthlyView = view
     );
-  }
+   }
 
   changeMonthView(isActive: boolean): void {
     this.store.dispatch(new ToggleViewMode(isActive));
   }
-
 }
