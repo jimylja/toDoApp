@@ -20,7 +20,7 @@ export class EventListComponent {
 
   eventClick(activeDay): void {
     const eventDate = moment(activeDay);
-    if (!this.activeDate.isSame(eventDate, 'date')) {
+    if (!moment(this.activeDate).isSame(eventDate, 'date')) {
       this.store.dispatch(new ChangeActiveDate(eventDate.clone()));
     }
   }

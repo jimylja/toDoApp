@@ -3,7 +3,9 @@ form {
     border: none;
     background: linear-gradient(180deg, rgba(0,34,36,0) 0%, rgba(90, 149, 255, 0.06) 40%, rgba(0,212,255,0) 70%);
   }
-
+  label[for="datePicker"]:hover {
+    cursor: pointer;
+  }
   .arrow {
     display: inline-block;
     vertical-align: middle;

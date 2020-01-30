@@ -1,6 +1,6 @@
 <div class="top-section">
   <header class="container">
-    <h1 class="text-center text-uppercase py-3 font-weight-bolder">TTD</h1>
+    <h1 class="text-center text-uppercase pt-2 py-md-3 font-weight-bolder">TTD</h1>
   </header>
   <section class="switchers container my-3">
     <div class="row">
@@ -27,8 +27,6 @@
     </div>
   </section>
   <app-calendar [activeDate]="activeDate$ | async"></app-calendar>
-  <h3 *ngIf="monthlyView" class="font-weight-bold text-center py-2 date">{{activeDate$ | async | date: 'MMMM'}}</h3>
-  <h3 *ngIf="!monthlyView" class="font-weight-bold text-center py-2 date">{{activeDate$ | async | date: 'EEEE-dd.MM.yy'}}</h3>
 </div>
-<app-event-list [activeDate]="activeDate$" [monthlyView]="monthlyView"></app-event-list>
+<app-event-list [activeDate]="activeDate$ | async" [monthlyView]="monthlyView"></app-event-list>
 <app-footer></app-footer>
