@@ -10,19 +10,22 @@ import { FooterComponent } from './footer/footer.component';
 import { EventComponent } from './event-list/event/event.component';
 import { PopupComponent } from './popup/popup.component';
 import { AddEventComponent } from './add-event/add-event.component';
+import { AddCategoryComponent } from './add-category/add-category.component';
 import { NgbDatepickerModule, NgbTimepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('AppComponent', () => {
+  const initialState = {};
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule, FormsModule, ReactiveFormsModule, NgbDatepickerModule, HttpClientTestingModule
       ],
       declarations: [
-        AppComponent, CalendarComponent, EventListComponent, FooterComponent,
+        AppComponent, CalendarComponent, EventListComponent, FooterComponent, AddCategoryComponent,
         EventComponent, PopupComponent, AddEventComponent, NgbTimepicker, NgbPopover
       ],
-      providers: []
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
   }));
 

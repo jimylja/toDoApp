@@ -1,7 +1,9 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren, ViewEncapsulation} from '@angular/core';
 import { Event } from '../../models/event';
 import { PopupConfig } from '../../models/popup';
-import { EventsService } from '../../services/events.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../state/app.state';
+import {DeleteEvent, UpdateEvent} from '../../state/app.actions';
 import {trigger, keyframes, animate, transition, style, state} from '@angular/animations';
 
 @Component({
@@ -30,7 +32,7 @@ export class EventComponent implements AfterViewInit {
   eventCard: HTMLDListElement;
   popupConfig: PopupConfig = {isOpen: false};
 
-  constructor(private eventService: EventsService) { }
+  constructor(private store: Store<AppState>) { }
 
   ngAfterViewInit() {
     if (this.EventRef.first) {
@@ -41,11 +43,11 @@ export class EventComponent implements AfterViewInit {
 
   completeEvent(isComplete: boolean = this.event.complete): void {
     this.event.complete = isComplete;
-    this.eventService.updateEvent(this.event);
+    this.store.dispatch(new UpdateEvent(this.event));
   }
 
-  deleteEvent(event: Event): void {
-    this.eventService.deleteEvent(event);
+  deleteEvent(): void {
+    this.store.dispatch(new DeleteEvent(this.event));
   }
 
   moveLeft(moveEvent: any): void {
@@ -63,7 +65,7 @@ export class EventComponent implements AfterViewInit {
     if (!this.animationState) {
       this.animationState = st;
       if (this.animationState === 'slideOutLeft') {
-        setTimeout( () => { this.deleteEvent(this.event); }, 500 );
+        setTimeout( () => { this.deleteEvent(); }, 500 );
       }
     }
   }

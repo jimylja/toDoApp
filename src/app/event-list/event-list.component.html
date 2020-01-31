@@ -1,6 +1,8 @@
 <main *ngIf="(events$ | async) as events; else Loading" class="container event-block">
+  <h3 *ngIf="monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate| date: 'MMMM'}}</h3>
+  <h3 *ngIf="!monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate| date: 'EEEE-dd.MM.yy'}}</h3>
   <section class="row events">
-    <ul *ngIf="(events | json) != '{}'; else noEvents" class="offset-md-2 col-md-8 p-3" #dates>
+    <ul *ngIf="(events | json) != '{}'; else noEvents" class="offset-md-2 col-md-8 p-md-3">
       <ng-container *ngFor="let day of events | keyvalue">
         <time class="sticky-date" *ngIf="monthlyView" [attr.datetime]="day.key">{{day.key}}</time>
         <ng-container>
