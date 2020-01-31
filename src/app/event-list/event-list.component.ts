@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Observable} from 'rxjs';
 import {GroupedEvents} from '../models/event';
 import {AppState} from '../state/app.state';
-import { getActiveDateEvents, getActiveMonthEvents } from '../state';
+import {getActiveDateEvents, getActiveMonthEvents} from '../state';
 import {select, Store} from '@ngrx/store';
 import {ChangeActiveDate} from '../state/app.actions';
 import * as moment from 'moment';

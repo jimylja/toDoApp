@@ -3,16 +3,24 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { CalendarComponent } from './calendar.component';
 import { EventsService } from '../services/events.service';
+import { provideMockStore } from '@ngrx/store/testing';
+import * as moment from 'moment';
 
 describe('CalendarComponent', () => {
   let component: CalendarComponent;
   let fixture: ComponentFixture<CalendarComponent>;
+  const initialState = {
+    monthlyViewMode: true,
+    activeDate: moment().utc(true),
+    activeDateEvents: {},
+    events: Object.create({})
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [CalendarComponent],
-      providers: [EventsService]
+      providers: [EventsService, provideMockStore({initialState})]
     })
     .compileComponents();
   }));
@@ -22,6 +30,8 @@ describe('CalendarComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  afterEach(() => { fixture.destroy(); });
 
   it('should create', () => {
     expect(component).toBeTruthy();

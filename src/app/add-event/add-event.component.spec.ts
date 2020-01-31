@@ -8,16 +8,18 @@ import { EventsService } from '../services/events.service';
 import { NgbDatepickerModule, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriesService } from '../services/categories.service';
 import { FooterComponent } from '../footer/footer.component';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('AddEventComponent', () => {
   let component: AddEventComponent;
   let fixture: ComponentFixture<AddEventComponent>;
+  const initialState = {};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, NgbDatepickerModule],
       declarations: [AddEventComponent, NgbTimepicker, PopupComponent, FooterComponent, AddCategoryComponent],
-      providers: [EventsService, CategoriesService]
+      providers: [EventsService, CategoriesService, provideMockStore({ initialState })]
     })
     .compileComponents();
   }));

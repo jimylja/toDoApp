@@ -25,7 +25,10 @@ export class CalendarComponent {
    * return's dates for displayed month
    */
   get calendar(): Array<Array<moment.Moment>> {
-    return this.getMonthCalendar(this.activeDate.month(), this.activeDate.year());
+    if (this.activeDate) {
+      return this.getMonthCalendar(this.activeDate.month(), this.activeDate.year());
+    }
+    return this.getMonthCalendar(this.moment().month(), this.moment().year());
   }
 
   /**

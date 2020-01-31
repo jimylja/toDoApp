@@ -39,7 +39,10 @@ export class AddEventComponent implements OnInit {
   popupConfig: PopupConfig = {isOpen: false};
 
   get eventStart(): moment.Moment {
-    return this.activeDate.clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
+    if (this.activeDate) {
+      return this.activeDate.clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
+    }
+    return moment().clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
   }
 
   get eventEnd(): moment.Moment {
