@@ -1,34 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { EventsService } from '../services/events.service';
-import { Observable} from 'rxjs';
-import { GroupedEvents } from '../models/event';
+import {Component, Input} from '@angular/core';
 import * as moment from 'moment';
+
+import {select, Store} from '@ngrx/store';
+import {getActiveMonthEvents} from '../state';
+import {AppState} from '../state/app.state';
+import {ChangeActiveDate, ChangeActiveMonth} from '../state/app.actions';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss']
+  styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit {
 
+export class CalendarComponent {
   today = moment();
   monthFirstDay: moment.Moment;
-  groupedEvents$: Observable<GroupedEvents>;
-  activeDate$: Observable<moment.Moment>;
+  groupedEvents$ = this.store.pipe(select(getActiveMonthEvents));
   moment: any = moment;
+  @Input() activeDate;
 
-  constructor( private eventService: EventsService) { }
-
-  ngOnInit() {
-    this.groupedEvents$ = this.eventService.activeMonthEvents$;
-    this.activeDate$ = this.eventService.activeDate$;
-  }
+  constructor(private store: Store<AppState>) { }
 
   /**
    * return's dates for displayed month
    */
   get calendar(): Array<Array<moment.Moment>> {
-    return this.getMonthCalendar(this.eventService.activeMonth$.value, this.eventService.activeYear$.value);
+    if (this.activeDate) {
+      return this.getMonthCalendar(this.activeDate.month(), this.activeDate.year());
+    }
+    return this.getMonthCalendar(this.moment().month(), this.moment().year());
   }
 
   /**
@@ -60,14 +60,14 @@ export class CalendarComponent implements OnInit {
    * @param direction number - next month: 1; previous month: -1
    */
   changeMonth(direction: number): void {
-    this.eventService.changeMonth(direction);
+    this.store.dispatch(new ChangeActiveMonth(direction));
   }
 
   /**
    * changes the active date
    * @param day moment.Moment - Moment object with selected date
    */
-  changeActiveDate(day) {
-    this.eventService.activeDate$.next(day);
+  changeActiveDate(day: moment.Moment) {
+    this.store.dispatch(new ChangeActiveDate(day));
   }
 }

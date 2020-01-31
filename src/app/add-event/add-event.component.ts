@@ -1,11 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CategoriesService} from '../services/categories.service';
-import {EventsService} from '../services/events.service';
 import {Category} from '../models/category';
 import {Event} from '../models/event';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {CreateEvent, UpdateEvent} from '../state/app.actions';
+import { AppState } from '../state/app.state';
+
 import * as moment from 'moment';
+import {PopupConfig} from '../models/popup';
 
 export interface EventDate {
   year: number;
@@ -23,15 +27,22 @@ export interface EventDate {
 })
 export class AddEventComponent implements OnInit {
 
-  constructor(private categoriesService: CategoriesService, private eventService: EventsService, private fb: FormBuilder) { }
+  constructor(
+    private categoriesService: CategoriesService,
+    private fb: FormBuilder,
+    private store: Store<AppState>) { }
 
+  @Input() activeDate: moment.Moment;
   @Input() event: Event;
   categories$: Observable<Category[]>;
-  activeDate = this.eventService.activeDate$.value;
   newEventForm: FormGroup;
+  popupConfig: PopupConfig = {isOpen: false};
 
   get eventStart(): moment.Moment {
-    return this.activeDate.clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
+    if (this.activeDate) {
+      return this.activeDate.clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
+    }
+    return moment().clone().set({hour: moment().get('hour'), minute: moment().get('minute')});
   }
 
   get eventEnd(): moment.Moment {
@@ -58,9 +69,9 @@ export class AddEventComponent implements OnInit {
     newEvent.complete = this.event ? this.event.complete : false;
     if (this.event) {
       newEvent._id = this.event._id;
-      this.eventService.updateEvent(newEvent);
+      this.store.dispatch(new UpdateEvent(newEvent));
     } else {
-      this.eventService.addEvent(newEvent);
+      this.store.dispatch(new CreateEvent(newEvent));
     }
   }
 
@@ -87,5 +98,14 @@ export class AddEventComponent implements OnInit {
     const {hour, minute, second} = this.newEventForm.controls.endTime.value;
     const dateObj = moment().set({year, month: month - 1, date: day, hour, minute, second});
     return dateObj.format('YYYY-MM-DD HH:mm:ss');
+  }
+
+   showCategoryPopup(category?: Category) {
+    if (category) {
+      this.popupConfig.category = category;
+    } else {
+      this.popupConfig.category = null;
+    }
+    this.popupConfig.isOpen = true;
   }
 }
