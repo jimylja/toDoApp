@@ -13,6 +13,7 @@ import { AddEventComponent } from './add-event/add-event.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
 import { NgbDatepickerModule, NgbTimepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { provideMockStore } from '@ngrx/store/testing';
+import {SwitcherComponent} from './switcher/switcher.component';
 
 describe('AppComponent', () => {
   const initialState = {};
@@ -23,7 +24,7 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent, CalendarComponent, EventListComponent, FooterComponent, AddCategoryComponent,
-        EventComponent, PopupComponent, AddEventComponent, NgbTimepicker, NgbPopover
+        EventComponent, PopupComponent, AddEventComponent, NgbTimepicker, NgbPopover, SwitcherComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

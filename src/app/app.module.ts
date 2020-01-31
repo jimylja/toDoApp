@@ -24,7 +24,8 @@ import { AppEffects } from './state/app.effects';
 import * as Hammer from 'hammerjs';
 import { AddEventComponent } from './add-event/add-event.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
+import { SwitcherComponent } from './switcher/switcher.component';
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = {
     swipe: { direction: Hammer.DIRECTION_ALL },
@@ -40,7 +41,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     EventComponent,
     FooterComponent,
     AddEventComponent,
-    AddCategoryComponent
+    AddCategoryComponent,
+    SwitcherComponent
   ],
   imports: [
     BrowserModule,

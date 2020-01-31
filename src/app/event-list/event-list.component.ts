@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Observable} from 'rxjs';
 import {GroupedEvents} from '../models/event';
 import {AppState} from '../state/app.state';
@@ -11,6 +11,7 @@ import * as moment from 'moment';
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class EventListComponent {

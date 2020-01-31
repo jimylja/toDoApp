@@ -28,6 +28,7 @@ export class CalendarComponent {
     if (this.activeDate) {
       return this.getMonthCalendar(this.activeDate.month(), this.activeDate.year());
     }
+    console.log('calendar');
     return this.getMonthCalendar(this.moment().month(), this.moment().year());
   }
 

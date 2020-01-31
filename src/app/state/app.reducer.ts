@@ -44,13 +44,14 @@ export function reducer(state = initialState, action: AppActions): AppState {
     case StateActionTypes.MonthlyEventsFetched:
       return {
         ...state,
-        events: addMonthEventsToState(state, action.payload)
+        events: addMonthEventsToState(state, action.payload),
+        activeDateEvents: getEventsForDate(state, state.activeDate.utc(true))
       };
 
     case StateActionTypes.CreateEventSuccess:
       return {
         ...state,
-        events: addEventToState(state.events, action.payload)
+        events: addEventToState(state.events, action.payload),
       };
 
     case StateActionTypes.DeleteEventSuccess: {

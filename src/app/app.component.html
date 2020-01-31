@@ -2,31 +2,8 @@
   <header class="container">
     <h1 class="text-center text-uppercase pt-2 py-md-3 font-weight-bolder">TTD</h1>
   </header>
-  <section class="switchers container my-3">
-    <div class="row">
-      <div class="col">
-        <div class="custom-control px-0">
-          <input [checked]="monthlyView"
-                 (change)="changeMonthView(true)"
-                 type="radio"
-                 id="monthlyView"
-                 name="viewMode"
-                 class="d-none custom-control-input">
-          <label class="switcher-label text-center" for="monthlyView">Monthly</label>
-        </div>
-        <div class="custom-control px-0">
-          <input [checked]="!monthlyView"
-                 (change)="changeMonthView(false)"
-                 type="radio"
-                 id="dailyView"
-                 name="viewMode"
-                 class="d-none custom-control-input">
-          <label class="switcher-label text-center active" for="dailyView">Daily</label>
-        </div>
-      </div>
-    </div>
-  </section>
-  <app-calendar [activeDate]="activeDate$ | async"></app-calendar>
+  <app-switcher (viewChanged)="onViewChanged($event)" [monthlyView]="monthlyView$|async"></app-switcher>
+  <app-calendar [activeDate]="activeDate$|async"></app-calendar>
 </div>
-<app-event-list [activeDate]="activeDate$ | async" [monthlyView]="monthlyView"></app-event-list>
+<app-event-list [activeDate]="activeDate$|async" [monthlyView]="monthlyView$ | async"></app-event-list>
 <app-footer></app-footer>

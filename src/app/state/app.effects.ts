@@ -21,15 +21,14 @@ export class AppEffects {
   getEvents$ = this.actions$.pipe(
     ofType(AppActions.StateActionTypes.LoadEventsForMonth),
     withLatestFrom(this.store.select(getActiveMonthEvents), this.store.select(getActiveDate)),
-    filter( ([, eventsForMonth]) => {
-      return eventsForMonth === null;
-    }),
+    filter( ([, eventsForMonth]) => eventsForMonth === null),
     mergeMap( ([, , activeDate]) =>
       this.eventService.getEvents(activeDate).pipe(
         switchMap( (events: GroupedEvents) => {
           return [
             new AppActions.LoadSuccess(events),
-            new AppActions.ChangeActiveDate(activeDate)];
+            // new AppActions.ChangeActiveDate(activeDate)
+          ];
         })
       )
     )
