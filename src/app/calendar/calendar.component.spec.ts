@@ -4,6 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CalendarComponent } from './calendar.component';
 import { EventsService } from '../services/events.service';
 import { provideMockStore } from '@ngrx/store/testing';
+import { MomentDatePipe } from '../moment-date.pipe';
 import * as moment from 'moment';
 
 describe('CalendarComponent', () => {
@@ -19,7 +20,7 @@ describe('CalendarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [CalendarComponent],
+      declarations: [CalendarComponent, MomentDatePipe],
       providers: [EventsService, provideMockStore({initialState})]
     })
     .compileComponents();
@@ -28,6 +29,7 @@ describe('CalendarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
+    component.activeDate = initialState.activeDate;
     fixture.detectChanges();
   });
 

@@ -2,8 +2,8 @@
   <header class="container">
     <h1 class="text-center text-uppercase pt-2 py-md-3 font-weight-bolder">TTD</h1>
   </header>
-  <app-switcher (viewChanged)="onViewChanged($event)" [monthlyView]="monthlyView$|async"></app-switcher>
+  <app-switcher (viewChanged)="onViewChanged($event)" [monthlyView]="monthlyView$ | async"></app-switcher>
   <app-calendar [activeDate]="activeDate$|async"></app-calendar>
 </div>
-<app-event-list [activeDate]="activeDate$|async" [monthlyView]="monthlyView$ | async"></app-event-list>
+<app-events-shell [activeDate]="activeDate$ | async" [monthlyView]="monthlyView$ | async"></app-events-shell>
 <app-footer></app-footer>

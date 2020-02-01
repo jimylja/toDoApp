@@ -38,7 +38,7 @@
   }
   .dates {
     .d-table-cell {
-      &:hover, &.current-day {
+      &:hover:not(.past-day), &.current-day {
         cursor: pointer;
         font-weight: bold;
         background-color: $bg-color;
@@ -48,7 +48,10 @@
         font-weight: bold;
         background-color: #fbecfc;
       }
-      &.past-day { color: #9a9b9b; }
+      &.past-day {
+        color: #9a9b9b;
+        cursor: default;
+      }
     }
 
     .event-marks {

@@ -3,9 +3,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventComponent } from './event.component';
-import { PopupComponent } from '../../popup/popup.component';
-import { AddEventComponent } from '../../add-event/add-event.component';
-import { AddCategoryComponent } from '../../add-category/add-category.component';
+import { PopupComponent } from '../../../popup/popup.component';
+import { AddEventComponent } from '../../../add-event/add-event.component';
+import { AddCategoryComponent } from '../../../add-category/add-category.component';
 import { NgbTimepicker, NgbDatepickerModule, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { provideMockStore } from '@ngrx/store/testing';
 

@@ -1,0 +1,3 @@
+<h3 *ngIf="monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate | momentDate: 'MMMM'}}</h3>
+<h3 *ngIf="!monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate | momentDate: 'dddd-DD.MM.YY'}}</h3>
+<app-event-list [monthlyView]="monthlyView"></app-event-list>
