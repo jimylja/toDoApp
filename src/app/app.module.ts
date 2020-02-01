@@ -8,8 +8,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
-import { EventListComponent } from './event-list/event-list.component';
-import { EventComponent } from './event-list/event/event.component';
+import { EventListComponent } from './events-shell/event-list/event-list.component';
+import { EventComponent } from './events-shell/event-list/event/event.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './footer/footer.component';
 import { PopupModule } from './popup/popup.module';
@@ -24,12 +24,17 @@ import { AppEffects } from './state/app.effects';
 import * as Hammer from 'hammerjs';
 import { AddEventComponent } from './add-event/add-event.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
+import { SwitcherComponent } from './switcher/switcher.component';
+import { MomentDatePipe } from './moment-date.pipe';
+import { EventsShellComponent } from './events-shell/events-shell.component';
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = {
-    swipe: { direction: Hammer.DIRECTION_ALL },
-    press: { time: 1000 }
-  } as any;
+    swipe: { direction: Hammer.DIRECTION_HORIZONTAL },
+    pinch: { enable: false },
+    rotate: { enable: false },
+    pan: { enable: false },
+    press: { time: 1000 }  } as any;
 }
 
 @NgModule({
@@ -40,7 +45,10 @@ export class MyHammerConfig extends HammerGestureConfig {
     EventComponent,
     FooterComponent,
     AddEventComponent,
-    AddCategoryComponent
+    AddCategoryComponent,
+    SwitcherComponent,
+    MomentDatePipe,
+    EventsShellComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,17 +1,5 @@
-@import '../../styles.scss';
+@import '../../../styles';
 
-h3 {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background-color: #f8fbfc;
-  z-index: 10;
-  font-size: 1.25em;
-  box-shadow: 0 15px 20px 5px rgba(248, 251, 252, 0.75);
-  @media(min-width: 769px) {
-    top: 500px;
-  }
-}
 .event-block {
   padding-bottom: 100px;
   .events {

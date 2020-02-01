@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, ElementRef, Input, QueryList, ViewChildren, ViewEncapsulation} from '@angular/core';
-import { Event } from '../../models/event';
-import { PopupConfig } from '../../models/popup';
+import { Event } from '../../../models/event';
+import { PopupConfig } from '../../../models/popup';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../state/app.state';
-import {DeleteEvent, UpdateEvent} from '../../state/app.actions';
+import { AppState } from '../../../state/app.state';
+import {DeleteEvent, UpdateEvent} from '../../../state/app.actions';
 import {trigger, keyframes, animate, transition, style, state} from '@angular/animations';
 
 @Component({
