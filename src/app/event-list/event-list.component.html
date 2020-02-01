@@ -1,5 +1,5 @@
-<h3 *ngIf="monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate| date: 'MMMM'}}</h3>
-<h3 *ngIf="!monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate| date: 'EEEE-dd.MM.yy'}}</h3>
+<h3 *ngIf="monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate | momentDate: 'MMMM'}}</h3>
+<h3 *ngIf="!monthlyView" class="font-weight-bold text-center py-1 py-md-2 date">{{activeDate | momentDate: 'dddd-DD.MM.YY'}}</h3>
 <main *ngIf="(events$ | async) as events; else Loading" class="container event-block">
   <section class="row events">
     <ul *ngIf="(events | json) != '{}'; else noEvents" class="offset-md-2 col-md-8 p-md-3">

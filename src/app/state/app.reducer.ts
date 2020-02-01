@@ -39,7 +39,7 @@ export function reducer(state = initialState, action: AppActions): AppState {
     case StateActionTypes.ChangeActiveMonth:
       return {
         ...state,
-        activeDate: state.activeDate.clone().add(action.payload, 'month')
+        activeDate: state.activeDate.clone().utc(true).add(action.payload, 'month')
       };
     case StateActionTypes.MonthlyEventsFetched:
       return {

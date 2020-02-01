@@ -26,6 +26,7 @@ import { AddEventComponent } from './add-event/add-event.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
 import { environment } from '../environments/environment';
 import { SwitcherComponent } from './switcher/switcher.component';
+import { MomentDatePipe } from './moment-date.pipe';
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = {
     swipe: { direction: Hammer.DIRECTION_ALL },
@@ -42,7 +43,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     FooterComponent,
     AddEventComponent,
     AddCategoryComponent,
-    SwitcherComponent
+    SwitcherComponent,
+    MomentDatePipe,
   ],
   imports: [
     BrowserModule,

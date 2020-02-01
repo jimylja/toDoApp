@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import * as moment from 'moment';
 
 import {select, Store} from '@ngrx/store';
@@ -10,26 +10,21 @@ import {ChangeActiveDate, ChangeActiveMonth} from '../state/app.actions';
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
   today = moment();
   monthFirstDay: moment.Moment;
   groupedEvents$ = this.store.pipe(select(getActiveMonthEvents));
   moment: any = moment;
-  @Input() activeDate;
+  calendar: Array<Array<moment.Moment>>;
+  @Input() activeDate: moment.Moment;
 
   constructor(private store: Store<AppState>) { }
 
-  /**
-   * return's dates for displayed month
-   */
-  get calendar(): Array<Array<moment.Moment>> {
-    if (this.activeDate) {
-      return this.getMonthCalendar(this.activeDate.month(), this.activeDate.year());
-    }
-    console.log('calendar');
-    return this.getMonthCalendar(this.moment().month(), this.moment().year());
+  ngOnInit(): void {
+    this.calendar = this.getMonthCalendar(this.activeDate.month(), this.activeDate.year());
   }
 
   /**
@@ -39,7 +34,7 @@ export class CalendarComponent {
    * @returns array - array of dates grouped by weeks
    */
   getMonthCalendar(month: number, year: number) {
-    this.monthFirstDay = moment([year, month, 1]);
+    this.monthFirstDay = moment([year, month, 1]).utc(true);
     const lastDay = this.monthFirstDay.clone().endOf('month');
     let monday = this.monthFirstDay.clone().startOf('isoWeek');
     const displayedWeeks = lastDay.diff(monday, 'weeks');
@@ -48,10 +43,10 @@ export class CalendarComponent {
     for (let i = 0; i <= displayedWeeks; i++) {
       const weekDates = [];
       for (let j = 0; j < 7; j++) {
-        weekDates.push(monday.clone().add(j, 'days'));
+        weekDates.push(monday.clone().utc(true).add(j, 'days'));
       }
       monthDates.push(weekDates);
-      monday = monday.clone().add(7, 'days');
+      monday = monday.clone().utc(true).add(7, 'days');
     }
     return monthDates;
   }
@@ -62,6 +57,8 @@ export class CalendarComponent {
    */
   changeMonth(direction: number): void {
     this.store.dispatch(new ChangeActiveMonth(direction));
+    const activeDate = this.activeDate.add(direction, 'month');
+    this.calendar = this.getMonthCalendar(activeDate.month(), activeDate.year());
   }
 
   /**
@@ -69,6 +66,11 @@ export class CalendarComponent {
    * @param day moment.Moment - Moment object with selected date
    */
   changeActiveDate(day: moment.Moment) {
-    this.store.dispatch(new ChangeActiveDate(day));
+    if (!this.activeDate.isSame(day, 'date') ) {
+      this.store.dispatch(new ChangeActiveDate(day));
+      if (!this.activeDate.isSame(day, 'month')) {
+        this.calendar = this.getMonthCalendar(day.month(), day.year());
+      }
+    }
   }
 }
