@@ -2,12 +2,12 @@ dist: trusty
 sudo: required
 
 language: node_js
-node_js:
-  - '10'
+  node_js:
+    - '12'
 
 branches:
   only:
-    - deploy
+    - master
 
 addons:
   chrome: stable
@@ -17,11 +17,32 @@ cache:
     - ./node_modules
 
 env:
+  global:
+    CODECOV_TOKEN=$CODECOV_TOKEN
   matrix:
     secure: hzaJV0//DkWV7kfP8AW/AfZdY8qMy6P+J95kVYYLfOF7fSr3oLFK7SVc14nqxArdOdr02BnOQiZVmH0MN/3TJOTvkUpbhdoQVJOnc9+zhFonnKUDU5TPp/zjmUept7I7TnsuqqimVBVG6OxROuwzyU9uTyxwYa5JQhVqFKjEynX5yBDw4MVBWF/UvMUyeRiJwWCuzVm1GDH2F5bilxn1sCnuWVTABIzwVeSVc0eVkaZOfHfxyyeMMPvhUVxxWggVql7yTjTklLa+w56jQHjWuqa/rhMwQaZiuzwheVwnh1kJBEQEe/Yh/EElRjZUCw8iNH44vbiwUKAWT4qq2qGqvA4xCN/MB5vx1toB4wZb7e0ErJVtt3ICfuXxRa5O7Rxb2QO5g1GplbpPAyKhCGujBxdViDug8rENJMJVud3P7VckZ8kIQei1mPJepWdfZjtpIbK3wVSJD5cJOwYxTMvcguhVPyjglwnwAQl8lBQICLxjovSOBtl/zwe3PZlO4pKLPTXIus8geCaLBmlt2MPDzH+trgZkOpzoZr/vT7diZHTHBluvTffXc4QiHvV/i9LIMYlyt3qtvJh3GYHyMfpma68RGWHH+I7ahOKGwFolnBw0VmzX3ZVAptlbYBQJKuf4OusreCDkvF7+vO/TdP0940gLvxA0m+2HQ4yNr2/lf2s=
+
+before_install:
+  - pip install --user codecov
+
 
 install:
   - npm install
 
+before_script:
+  - npm install -g @angular/cli
+
+jobs:
+  include:
+    - stage: Test coverage
+  script:
+    - ng test --browsers=ChromeHeadlessNoSandbox --codeCoverage=true --watch=false
+  after_script:
+    - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./node_modules/.bin/codecov; fi
+
 script:
-  - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+  - npm install
+  - npm run build
+
+after_success:
+  - codecov
