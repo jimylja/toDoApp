@@ -1,0 +1,63 @@
+@import '../../styles.scss';
+
+.calendar {
+  background-color: #fff;
+  .arrow-left, .arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    &:hover { cursor: pointer; }
+  }
+  .arrow-left {
+    border-right:10px solid #5a95ff;
+    &:hover { border-right-color: darken(#5a95ff, 25%); }
+  }
+  .arrow-right {
+    border-left: 10px solid #5a95ff;
+    &:hover { border-left-color: darken(#5a95ff, 25%); }
+  }
+
+  .d-table-cell {
+    text-align: center;
+    vertical-align: middle;
+    height: 40px;
+    width: 40px;
+    position: relative;
+  }
+  .week-days {
+    .d-table-cell {
+      color: #9a9b9b;
+      border-bottom: 1px solid #e7e7e9;
+    }
+  }
+  .dates {
+    .d-table-cell {
+      &:hover, &.current-day {
+        cursor: pointer;
+        font-weight: bold;
+        background-color: $bg-color;
+        text-decoration: underline;
+      }
+      &.active {
+        font-weight: bold;
+        background-color: #fbecfc;
+      }
+      &.past-day { color: #9a9b9b; }
+    }
+
+    .event-marks {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      bottom: 0;
+      .category-mark {
+        width: 5px;
+        height: 5px;
+        margin: 0 1px;
+        border-radius: 50%;
+      }
+    }
+  }
+}

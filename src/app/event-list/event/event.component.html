@@ -1,0 +1,14 @@
+<li class="list-unstyled my-3"
+    #EventRef
+    [@eventAnimator]="animationState"
+    (panleft)="moveLeft($event)"
+    (swipeleft)="startAnimation('slideOutLeft')">
+  <ng-container *ngIf="event">
+    <div [ngClass]="{'complete': event.complete}" class="event d-flex align-items-center justify-content-between px-sm-3 py-3">
+      <div [ngStyle]="{background: event.category.color}" class="category-label"></div>
+      <div (click)="completeEvent(event)" class="col-6 event-description font-weight-bold">{{event.title}}</div>
+      <div class="col-3 event-date text-right">{{event.startDate | date: 'dd MMM'}}</div>
+      <div class="col-3 event-time text-right">{{event.startDate | date: 'h:mm a'}}</div>
+    </div>
+  </ng-container>
+</li>

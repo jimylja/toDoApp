@@ -1,16 +1,28 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 import { AppComponent } from './app.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CalendarComponent } from './calendar/calendar.component';
+import { EventListComponent } from './event-list/event-list.component';
+import { FooterComponent } from './footer/footer.component';
+import { EventComponent } from './event-list/event/event.component';
+import { PopupComponent } from './popup/popup.component';
+import { AddEventComponent } from './add-event/add-event.component';
+import { NgbDatepickerModule, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule, FormsModule, ReactiveFormsModule, NgbDatepickerModule, HttpClientTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent, CalendarComponent, EventListComponent, FooterComponent,
+        EventComponent, PopupComponent, AddEventComponent, NgbTimepicker
       ],
+      providers: []
     }).compileComponents();
   }));
 
@@ -18,18 +30,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'toDo'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('toDo');
-  });
-
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to toDo!');
   });
 });
