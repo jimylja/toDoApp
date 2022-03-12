@@ -10,6 +10,7 @@ name: Main Workflow
 jobs:
   sonarqube:
     runs-on: ubuntu-latest
+    environment: todo-skr
     steps:
       - uses: actions/checkout@v2
         with:
