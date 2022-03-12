@@ -27,3 +27,11 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Setup sonar-scanner
+        uses: warchant/setup-sonar-scanner@v3
+      - name: Run sonar-scanner
+        run: sonar-scanner
+          -Dsonar.projectKey=ToDoApp
+          -Dsonar.sources=$GITHUB_WORKSPACE
+          -Dsonar.host.url=${{ secrets.SONAR_URL }}
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
