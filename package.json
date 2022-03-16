@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "sonar": "sonar-scanner",
+    "test:ci": "ng test --browsers ChromeHeadlessCI --code-coverage true --watch false",
     "start-server": "node server.js",
     "dev-server": "nodemon server.js"
   },
